@@ -22,7 +22,8 @@ class RendyDecoder(BaseDecodersClass):
             self.content = zlib.decompress(self.content)                   
             self.content = lzma.decompress(self.content)                   
             self.content = gzip.decompress(self.content)                   
-            self.content = marshal.loads(self.content).decode()              
+            self.content = marshal.loads(self.content).decode()
+                  
             self._remove_comments()
             if self.content:
                 self._write_result()
