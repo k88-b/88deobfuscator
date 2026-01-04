@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from typing import Tuple
 from ui.output import CliOutput
 
 class CliInput:
@@ -22,12 +23,18 @@ class CliInput:
             self.output.print_error("Неверный выбор функции.")
             continue
 
-    def get_file_name(self) -> str:
+    def get_file_name(self) -> Tuple[str, str]:
         file_name = input("Введите путь до файла: ")
         file_name = file_name + ".py" if not file_name.endswith(".py") else file_name
 
         if not os.path.exists(file_name):
             self.output.print_error("Файл не существует")
-            raise SystemExit()
+            raise FileNotFoundError()
+
+        new_base_name = f"decoded_{os.path.basename(file_name)}"
+        new_file_name = os.path.join(
+            os.path.dirname(file_name), new_base_name
+        )
+
             
-        return file_name
+        return file_name, new_file_name
