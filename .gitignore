@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.*cache
+.python-version
+
+cat_all_files.sh
+deobfuscator_all.py
+alldecoder.zip

