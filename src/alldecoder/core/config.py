@@ -15,7 +15,8 @@ FUNCTIONS = """
 5  → Gzip          11 → B32+Gzip     17 → Ne4toObf
 6  → Lzma          12 → B16+Gzip     18 → BlankOBFv2
 
-19 → Debugger     20 → Define Obf    99 → EXIT
+19 → ChristianObf  20 → Define Obf
+99 → EXIT
 """
 
 # -abstract_decoder.py config-
