@@ -25,8 +25,8 @@ class CliInput:
             continue
 
     def get_file_name(self) -> Tuple[str, str]:
-        # file_name = input("Введите путь до файла: ")
-        file_name = "testfiles/BlankObf/blank_enc"
+        file_name = input("Введите путь до файла: ")
+        # file_name = "testfiles/BlankObf/blank_enc"
         file_name = file_name + ".py" if not file_name.endswith(".py") else file_name
 
         if not os.path.exists(file_name):
