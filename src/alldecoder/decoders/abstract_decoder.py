@@ -71,9 +71,7 @@ class BaseDecodersClass(ABC):
             return False
         
     def _match_obfuscation(self, pattern: str) -> bool:
-        with open(self.file_name, "r", encoding="utf-8") as f:
-            self.content = f.read()
-            
+        self.content = self._read_file(self.file_name)
         self.match = re.search(pattern, self.content)
         if not self.match:
             self.output.print_error("Обфускация не обнаружена.")
