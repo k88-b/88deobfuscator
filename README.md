@@ -1,7 +1,5 @@
 **88 Deobfuscator**
 
-Python-инструмент для деобфускации файлов, защищенных популярными видами обфускаций.
-
 **Поддерживаемые обфускации:**
 - **Base:** base64, base32, base16
 - **Компрессии:** zlib, gzip, lzma
@@ -25,4 +23,5 @@ Python-инструмент для деобфускации файлов, защ
   <img src="https://github.com/user-attachments/assets/b29407e1-0928-4725-9d78-48fb79c4c6c8" width="45%" />
   <img src="https://github.com/user-attachments/assets/8c666492-0156-4e22-b1e4-b38a30e787c7" width="45%" />
 </div>
+
 
