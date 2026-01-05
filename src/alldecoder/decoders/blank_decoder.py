@@ -2,8 +2,11 @@
 
 import re
 import os
+import io
 import subprocess
+import sys
 from abc import ABC, abstractmethod
+from contextlib import redirect_stdout
 from typing import List, Union, Type
 from core.config import NOTE
 from ui.output import CliOutput 
@@ -37,14 +40,12 @@ class Decoder(ABC):
             self.output.print_error(f"Не удалось записать контент в файл {file_name}: {e}")
             return False
 
-    def _redirect_python_output(self, source_file: str, output_file: str) -> bool:
-        try:
-            with open(output_file, "w", encoding="utf-8") as f:
-                subprocess.run(["python3", source_file], stdout=f, text=True)
-                return True
-        except Exception as e:
-            self.output.print_error(f"Не удалось перенаправить вывод из временного файла: {e}")
-            return False
+    def _capture_exec_output(self) -> str:
+        namespace = {}
+        f = io.StringIO()
+        with redirect_stdout(f):
+            exec(self.content, namespace, namespace)
+        return f.getvalue().strip()
 
     def _replace_bytes(self) -> None:
         self.content = self.content.replace(
@@ -64,10 +65,8 @@ class FirstLayer(Decoder):
             ")))", 
             ")).decode())"
         )
-        self._write_file(file_name=".temp_decode.py", content=self.content)
-        self._redirect_python_output(".temp_decode.py", ".tempp_decode.py")
-        return self._read_file(".tempp_decode.py")
-
+        
+        return self._capture_exec_output()
 
 class SecondLayer(Decoder):
     def deobfuscate(self):
@@ -76,27 +75,24 @@ class SecondLayer(Decoder):
             "]))))", 
             "]))).decode())"
         )
-        self._write_file(file_name=".temp_decode.py", content=self.content)
-        self._redirect_python_output(".temp_decode.py", ".tempp_decode.py")
-        return self._read_file(".tempp_decode.py")
+
+        return self._capture_exec_output()
 
 
 class ThirdLayer(Decoder):
     def deobfuscate(self):
-        self.content = self._read_file(file_name=".tempp_decode.py", mode="lines")
         pattern = r"(.*?)\s*=\s*\[.*?\]"
-        match = re.search(pattern, self.content[0])
+        match = re.search(pattern, self.content)
         if match:
             ip_table_name = match.group(1)
         else:
             raise ValueError("Не удалось найти ip_table.")
-        self.content[-1] = (
-            f"data = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
-        )
-        self._write_file(file_name=".temp_decode.py", content=self.content, mode="lines")
-        self._redirect_python_output(".temp_decode.py", ".tempp_decode.py")
-        return self._read_file(".tempp_decode.py")
 
+        self.content = self.content.strip().split('\n')
+        self.content[-1] = f"\ndata = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
+        self.content = '\n'.join(self.content)
+
+        return self._capture_exec_output()
 
 class BlankObfDeobfuscator:
     def __init__(self, file_name: str, new_file_name: str, user_choice: str, cli_output: CliOutput) -> None:
@@ -167,9 +163,5 @@ class BlankObfDeobfuscator:
             self.output.print_error(e)
             return None
 
-        finally:
-            for file in [".temp_decode.py", ".tempp_decode.py", ".temp_decode.pyc"]:
-                if os.path.exists(file):
-                    os.remove(file)
 
                     

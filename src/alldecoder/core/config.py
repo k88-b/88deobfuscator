@@ -30,4 +30,5 @@ TEMP_DIR = ".tempdir"
 TEMP_FILE = ".temp.py"
 COMPILED_FILE = "__main__.pyc"
 
-
+# -input.py config-
+DECODED_FILE_PREFIX = "decoded_"
