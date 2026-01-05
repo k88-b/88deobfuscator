@@ -2,10 +2,12 @@
 
 import re
 import os
+import io
 import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from typing import Optional
+from contextlib import redirect_stdout
 from ui import CliOutput
 from core.config import EXEC_PATTERN, COMMENTS_PATTERN, NOTE, TEMP_DIR, TEMP_FILE, COMPILED_FILE
 
@@ -108,7 +110,15 @@ class BaseDecodersClass(ABC):
             )            
         except Exception as e:
             self.output.print_error(f"Не удалось записать финальный результат в файл: {e}")
-    
+
+    def _capture_exec_output(self, content: str) -> str:
+        namespace = {}
+        f = io.StringIO()
+        with redirect_stdout(f):
+            exec(content, namespace, namespace)
+        return f.getvalue().strip()
+
+
     def common_decode_logic(self, pattern: str, clean_pattern: str) -> bool:
         if not self._match_obfuscation(pattern):
             return False

@@ -12,11 +12,7 @@ class CliInput:
     def get_function_choice(self) -> str:
         while True:
             user_input = input("Ваш выбор: ").strip()
-            if user_input == "99":
-                print("Выход.")
-                raise SystemExit()
-
-            valid_choices = [str(i) for i in range(1, 21)]
+            valid_choices = [str(i) for i in range(1, 21)] + ["99"]
 
             if user_input in valid_choices:
                 return user_input
@@ -26,7 +22,6 @@ class CliInput:
 
     def get_file_name(self) -> Tuple[str, str]:
         file_name = input("Введите путь до файла: ")
-        # file_name = "testfiles/BlankObf/blank_enc"
         file_name = file_name + ".py" if not file_name.endswith(".py") else file_name
 
         if not os.path.exists(file_name):
