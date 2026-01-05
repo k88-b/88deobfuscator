@@ -16,29 +16,6 @@ class Decoder(ABC):
         self.content = content
         self.output = cli_output
 
-    def _read_file(self, file_name: str, mode: str = "") -> Union[str, List[str]]:
-        try:
-            with open(file_name, "r", encoding="utf-8") as f:
-                if mode == "lines":
-                    return f.readlines()
-                else:
-                    return f.read()
-        except Exception as e:
-            self.output.print_error(f"Не удалось прочитать содержимое файла {file_name}: {e}")
-            raise
-
-    def _write_file(self, file_name: str, content: str, mode: str = "") -> bool:
-        try:
-            with open(file_name, "w", encoding="utf-8") as f:
-                if mode == "lines":
-                    f.writelines(content)
-                else:
-                    f.write(content)
-                return True
-        except Exception as e:
-            self.output.print_error(f"Не удалось записать контент в файл {file_name}: {e}")
-            return False
-
     def _capture_exec_output(self) -> str:
         namespace = {}
         f = io.StringIO()
