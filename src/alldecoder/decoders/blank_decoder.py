@@ -8,9 +8,8 @@ import sys
 from abc import ABC, abstractmethod
 from contextlib import redirect_stdout
 from typing import List, Union, Type
-from core.config import NOTE
 from ui.output import CliOutput 
-
+from decoders.abstract_decoder import BaseDecodersClass
 
 class Decoder(ABC):
     def __init__(self, cli_output: CliOutput, content: str = "") -> None:
@@ -94,30 +93,7 @@ class ThirdLayer(Decoder):
 
         return self._capture_exec_output()
 
-class BlankObfDeobfuscator:
-    def __init__(self, file_name: str, new_file_name: str, user_choice: str, cli_output: CliOutput) -> None:
-        self.file_name = file_name
-        self.new_file_name = new_file_name
-        self.content = ""
-        self.output = cli_output
-        self.NOTE = NOTE
-
-    def _check_input_file(self) -> bool:
-        try:
-            with open(self.file_name, "r", encoding="utf-8") as f:
-                self.content = f.read()
-
-            pattern = r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"
-            match = re.search(pattern, self.content)
-            if match:
-                return True
-            else:
-                return False
-
-        except Exception as e:
-            self.output.print_error(f"Ошибка с проверкой исходного файла: {e}")
-            return False
-
+class BlankObfDeobfuscator(BaseDecodersClass):
     def _define_layer(self) -> str | None:
         layer = self.content
         if (
@@ -134,7 +110,7 @@ class BlankObfDeobfuscator:
 
     def decode(self) -> bool | None:
         try:
-            if not self._check_input_file():
+            if not self._match_obfuscation(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"):
                 self.output.print_error(f"Исходный файл ({self.file_name}) не обфусцирован.")
                 return None
 
@@ -155,8 +131,7 @@ class BlankObfDeobfuscator:
                 )
                 return None
 
-            with open(self.new_file_name, "w", encoding="utf-8") as f:
-                f.write(self.NOTE + self.content)
+            self._write_result()
             return True
 
         except Exception as e:
