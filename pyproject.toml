@@ -1,11 +1,10 @@
 [project]
-name = "alldecoder7"
+name = "88deobfuscator"
 version = "0.7.0"
 description = "Python скрипт, созданный для деобфускации различных программ, защищенных с помощью популярных обфускаций."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-]
+dependencies = []
 
 [dependency-groups]
 dev = [

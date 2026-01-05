@@ -1,7 +1,6 @@
 import re
 import zipfile
 import subprocess
-import shutil
 from ctypes import pythonapi
 from typing import Optional
 from decoders.abstract_decoder import BaseDecodersClass
@@ -70,7 +69,8 @@ def globals():\n    return {'Easy protect by Christian F.': "easy protect by Chr
             while self._check_obf_file(self.temp_file_path):
                 self._deobfuscate_layer()
 
-            shutil.copy(self.temp_file_path, self.new_file_name)
+            self.content = self._read_file(self.temp_file_path)
+            self._write_result()
             return True
 
         except Exception as e:

@@ -15,29 +15,6 @@ from decoders import (
 from utils import DefineObfuscation
 from core.config import FUNCTIONS
 
-DECODER_MAP = {
-    "1": BaseDecoder,
-    "2": BaseDecoder,
-    "3": BaseDecoder,
-    "4": CompressionUtilsDecoder,
-    "5": CompressionUtilsDecoder,
-    "6": CompressionUtilsDecoder,
-    "7": BaseCompressionUtilsDecoder,
-    "8": BaseCompressionUtilsDecoder,
-    "9": BaseCompressionUtilsDecoder,
-    "10": BaseCompressionUtilsDecoder,
-    "11": BaseCompressionUtilsDecoder,
-    "12": BaseCompressionUtilsDecoder,
-    "13": BaseCompressionUtilsDecoder,
-    "14": BaseCompressionUtilsDecoder,
-    "15": BaseCompressionUtilsDecoder,
-    "16": RendyDecoder,
-    "17": Ne4toObfDeobfuscator,
-    "18": BlankObfDeobfuscator,
-    "19": ChristianObfDeobfuscator,
-    "20": DefineObfuscation
-}
-
 
 class DependencyChecker:
     @staticmethod
@@ -49,6 +26,29 @@ class DependencyChecker:
 
 
 class Menu:
+    DECODER_MAP = {
+        "1": BaseDecoder,
+        "2": BaseDecoder,
+        "3": BaseDecoder,
+        "4": CompressionUtilsDecoder,
+        "5": CompressionUtilsDecoder,
+        "6": CompressionUtilsDecoder,
+        "7": BaseCompressionUtilsDecoder,
+        "8": BaseCompressionUtilsDecoder,
+        "9": BaseCompressionUtilsDecoder,
+        "10": BaseCompressionUtilsDecoder,
+        "11": BaseCompressionUtilsDecoder,
+        "12": BaseCompressionUtilsDecoder,
+        "13": BaseCompressionUtilsDecoder,
+        "14": BaseCompressionUtilsDecoder,
+        "15": BaseCompressionUtilsDecoder,
+        "16": RendyDecoder,
+        "17": Ne4toObfDeobfuscator,
+        "18": BlankObfDeobfuscator,
+        "19": ChristianObfDeobfuscator,
+        "20": DefineObfuscation
+    }
+
     def __init__(self):
         self.output = CliOutput()
         self.input = CliInput(self.output) 
@@ -67,7 +67,7 @@ class Menu:
             definer.define_obfuscation() 
             return
             
-        decoder_class = DECODER_MAP[user_choice]
+        decoder_class = self.DECODER_MAP[user_choice]
         decoder = decoder_class(
             file_name=file_name,
             new_file_name=new_file_name,

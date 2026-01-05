@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.12"
 
 [[package]]
-name = "alldecoder7"
+name = "88deobfuscator"
 version = "0.7.0"
 source = { virtual = "." }
 
