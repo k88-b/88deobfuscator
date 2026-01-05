@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
-import os
 import io
-import subprocess
-import sys
 from abc import ABC, abstractmethod
 from contextlib import redirect_stdout
-from typing import List, Union, Type
+from typing import Type
 from ui.output import CliOutput 
 from decoders.abstract_decoder import BaseDecodersClass
 
@@ -65,9 +62,9 @@ class ThirdLayer(Decoder):
         else:
             raise ValueError("Не удалось найти ip_table.")
 
-        self.content = self.content.strip().split('\n')
+        self.content = self.content.strip().split("\n")
         self.content[-1] = f"\ndata = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
-        self.content = '\n'.join(self.content)
+        self.content = "\n".join(self.content)
 
         return self._capture_exec_output()
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import shutil
 from ui import CliOutput, CliInput
 from decoders import (
@@ -83,6 +82,10 @@ class Menu:
     def run(self) -> None:
         self._show_menu()
         user_choice = self.input.get_function_choice()
+        if user_choice == "99":
+            print("Выход.")
+            raise SystemExit()
+
         file_name, new_file_name = self.input.get_file_name()
             
         self._process_user_choice(

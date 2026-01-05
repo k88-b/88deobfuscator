@@ -10,13 +10,12 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
     def _check_input_file(self) -> bool:
         return zipfile.is_zipfile(self.file_name)
 
-    def _check_obf_file(self, file_name: str) -> bool:
+    def _check_obf(self, content: str) -> bool:
         try:
-            self.content = self._read_file(file_name)
             pattern = r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString"
-            if self.content:
-                match = re.search(pattern, self.content)
-            return match is not None
+            if content:
+                match = re.search(pattern, content)
+                return match is not None
         except Exception as e:
             self.output.print_error(f"Не удалось проверить обфусцированный файл: {e}")
             raise
@@ -42,18 +41,15 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
 def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
 
             def hooked_exec(code, globals=None, locals=None) -> None:
-                self.content = code.decode()
-
-            pythonapi.PyRun_SimpleString = hooked_exec
-            with open(self.temp_file_path, "r") as f:
-                script = f.read()
-                if template_prefix in script:
-                    self.content = script.replace(template_prefix, "")
+                if template_prefix in code.decode():
+                    print(code.decode().replace(template_prefix, ""))
+                    
                 else:
-                    exec(script)
+                    print(code.decode())
                 
-            if self.content:
-                self._write_file(self.temp_file_path, self.content)
+            pythonapi.PyRun_SimpleString = hooked_exec
+      
+            self.content = self._capture_exec_output(self.content)
 
         except Exception as e:
             self.output.print_error(f"Не удалось деобфусцировать один из слоев: {e}")
@@ -65,11 +61,10 @@ def globals():\n    return {'Easy protect by Christian F.': "easy protect by Chr
                 raise SystemExit()
 
             self._extract_and_decompile()
-            
-            while self._check_obf_file(self.temp_file_path):
+            self.content = self._read_file(self.temp_file_path)
+            while self._check_obf(self.content):
                 self._deobfuscate_layer()
 
-            self.content = self._read_file(self.temp_file_path)
             self._write_result()
             return True
 
