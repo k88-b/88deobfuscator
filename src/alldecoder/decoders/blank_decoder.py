@@ -67,6 +67,7 @@ class FirstLayer(Decoder):
         
         return self._capture_exec_output()
 
+
 class SecondLayer(Decoder):
     def deobfuscate(self):
         self._replace_bytes()
