@@ -57,6 +57,11 @@ class Menu:
         DependencyChecker.check_dependencies(self.output)
         print(FUNCTIONS)
 
+    def _check_user_input(self, value: str | None) -> None:
+        if value is None:
+            print("Выход.")
+            raise SystemExit()
+
     def _process_user_choice(self, user_choice: str, file_name: str, new_file_name: str) -> None:
         if user_choice == "20":
             definer = DefineObfuscation(
@@ -81,12 +86,14 @@ class Menu:
     
     def run(self) -> None:
         self._show_menu()
-        user_choice = self.input.get_function_choice()
-        if user_choice == "99":
-            print("Выход.")
-            raise SystemExit()
 
-        file_name, new_file_name = self.input.get_file_name()
+        user_choice = self.input.get_function_choice()
+        self._check_user_input(user_choice)
+        
+        file_data = self.input.get_file_name()
+        self._check_user_input(file_data)
+
+        file_name, new_file_name = file_data
             
         self._process_user_choice(
             user_choice=user_choice,
