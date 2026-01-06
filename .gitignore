@@ -15,3 +15,5 @@ wheels/
 cat_all_files.sh
 deobfuscator_all.py
 alldecoder.zip
+
+testfiles/

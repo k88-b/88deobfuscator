@@ -4,18 +4,20 @@ import subprocess
 from ctypes import pythonapi
 from typing import Optional
 from decoders.abstract_decoder import BaseDecodersClass
-
+from core.config import CHRISTIAN_OBF_TEMPLATE_PREFIX as TEMPLATE_PREFIX
 
 class ChristianObfDeobfuscator(BaseDecodersClass):
+    LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
+
     def _check_input_file(self) -> bool:
         return zipfile.is_zipfile(self.file_name)
 
     def _check_obf(self, content: str) -> bool:
         try:
-            pattern = r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString"
             if content:
-                match = re.search(pattern, content)
-                return match is not None
+                return bool(self.LAYER_PATTERN.search(content))
+            else:
+                return False
         except Exception as e:
             self.output.print_error(f"Не удалось проверить обфусцированный файл: {e}")
             raise
@@ -37,15 +39,12 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
 
     def _deobfuscate_layer(self) -> None:
         try:
-            template_prefix = """
-def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
-
             def hooked_exec(code, globals=None, locals=None) -> None:
-                if template_prefix in code.decode():
-                    print(code.decode().replace(template_prefix, ""))
-                    
+                code = code.decode()
+                if TEMPLATE_PREFIX in code:
+                    print(code.replace(TEMPLATE_PREFIX, ""))
                 else:
-                    print(code.decode())
+                    print(code)
                 
             pythonapi.PyRun_SimpleString = hooked_exec
       

@@ -79,8 +79,9 @@ OBFUSCATION_PATTERNS = {
    	r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\)\);" : "marshal + zlib + base16",
 
     # other
-   	r"_=lambda __:__import__\('marshal'\)\.loads\(__import__\('gzip'\)\.decompress\(__import__\('lzma'\)\.decompress\(__import__\('zlib'\)\.decompress\(__import__\('base64'\)\.b64decode\(__\[::-1\]\)\)\)\)\);" : "rendy obf (marshal , gzip , lzma , zlib, base64 )",
-
+   	r"_=lambda __:__import__\('marshal'\)\.loads\(__import__\('gzip'\)\.decompress\(__import__\('lzma'\)\.decompress\(__import__\('zlib'\)\.decompress\(__import__\('base64'\)\.b64decode\(__\[::-1\]\)\)\)\)\);" : "rendy obf (marshal , gzip , lzma , zlib, base64 )"
 }
 
-
+# -christian_obf_decoder.py-
+CHRISTIAN_OBF_TEMPLATE_PREFIX= """
+def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
