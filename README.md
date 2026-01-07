@@ -4,7 +4,7 @@
 - **Base:** base64, base32, base16
 - **Compressions:** zlib, gzip, lzma
 - **Combinations:** base + compression
-- **Specific:** RendyObf, Ne4toObf, BlankObfv2, ChristianObf
+- **Specific:** RendyObf, BlankObfv2, ChristianObf
 - **Auto-detection:** automatic recognition of the obfuscation type
 
 
@@ -15,7 +15,7 @@
     uv sync
     uv run src/alldecoder/main.py
 
-Deobfuscating Ne4toObf and ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
+Deobfuscating ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
 
 **Before/After Example::**
 
