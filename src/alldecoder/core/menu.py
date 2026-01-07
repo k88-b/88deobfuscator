@@ -8,7 +8,8 @@ from decoders import (
     BaseCompressionUtilsDecoder,
     BlankObfDeobfuscator,
     RendyDecoder,
-    ChristianObfDeobfuscator
+    ChristianObfDeobfuscator,
+    CleverObfDeobfuscator
 )
 from utils import DefineObfuscation
 from core.config import FUNCTIONS
@@ -19,7 +20,7 @@ class DependencyChecker:
     def check_dependencies(output: CliOutput) -> None:
         if shutil.which("pycdc") is None:
             output.print_error(
-                "pycdc not found in PATH.\nDownload it from https://github.com/zrax/pycdc\nSome features will be unavailable. (Ne4toObf deobfuscator, ChristianObf deobfuscator)"
+                "pycdc not found in PATH.\nDownload it from https://github.com/zrax/pycdc\nSome features will be unavailable. (ChristianObf deobfuscator)"
             )
 
 
@@ -43,6 +44,7 @@ class Menu:
         "16": RendyDecoder,
         "17": ChristianObfDeobfuscator,            
         "18": BlankObfDeobfuscator,
+        "19": CleverObfDeobfuscator,
         "20": DefineObfuscation
     }
 
