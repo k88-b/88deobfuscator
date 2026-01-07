@@ -8,7 +8,6 @@ from decoders import (
     BaseCompressionUtilsDecoder,
     BlankObfDeobfuscator,
     RendyDecoder,
-    Ne4toObfDeobfuscator,
     ChristianObfDeobfuscator
 )
 from utils import DefineObfuscation
@@ -42,9 +41,8 @@ class Menu:
         "14": BaseCompressionUtilsDecoder,
         "15": BaseCompressionUtilsDecoder,
         "16": RendyDecoder,
-        "17": Ne4toObfDeobfuscator,
+        "17": ChristianObfDeobfuscator,            
         "18": BlankObfDeobfuscator,
-        "19": ChristianObfDeobfuscator,
         "20": DefineObfuscation
     }
 

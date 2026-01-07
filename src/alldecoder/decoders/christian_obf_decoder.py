@@ -6,6 +6,7 @@ from typing import Optional
 from decoders.abstract_decoder import BaseDecodersClass
 from core.config import CHRISTIAN_OBF_TEMPLATE_PREFIX as TEMPLATE_PREFIX
 
+
 class ChristianObfDeobfuscator(BaseDecodersClass):
     LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
 
