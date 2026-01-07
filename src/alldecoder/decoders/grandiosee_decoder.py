@@ -13,18 +13,12 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
     )
 
     def _extract_components(self):
-        match = re.search(self.SOURCE_PATTERN, self.content)
-        if match:
-            self.main_obfuscated_block = match.group(0)
-            self.exec_wrapper = match.group(1)
-            self.arg_0 = match.group(2)
-            self.arg_1 = match.group(3)
-            self.main_func = match.group(4)
+        self.main_obfuscated_block = self.match.group(0)
+        self.exec_wrapper = self.match.group(1)
+        self.arg_0 = self.match.group(2)
+        self.arg_1 = self.match.group(3)
+        self.main_func = self.match.group(4)
             
-        else:
-            self.output.print_error("Pattern not found in content")
-            raise ValueError()
-
     def _get_decode_logic(self) -> str:
         try:
             temp_content = self.content + f"print({self.arg_0});print({self.arg_1})"
@@ -41,7 +35,9 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            self._match_obfuscation(self.SOURCE_PATTERN)
+            if not self._match_obfuscation(self.SOURCE_PATTERN):
+                return False
+
             self._extract_components()
             
             self.content = self.content.replace(self.main_obfuscated_block, "")

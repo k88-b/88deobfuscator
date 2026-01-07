@@ -14,8 +14,7 @@ class CleverObfDeobfuscator(BaseDecodersClass):
             )
 
             if not self._match_obfuscation(source_pattern):
-                self.output.print_error(f"The source file ({self.file_name}) is not obfuscated.")
-                return None
+                return False
 
             crack_code = "print(_lIllIlIII)"
           
