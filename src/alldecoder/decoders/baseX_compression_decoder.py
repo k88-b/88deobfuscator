@@ -19,7 +19,7 @@ class BaseCompressionUtilsDecoder(BaseDecodersClass):
             return decompressed.decode("utf-8")
 
         except Exception as e:
-            self.output.print_error(f"Не удалось декодировать слой: {e}")
+            self.output.print_error(f"Failed to decode the layer: {e}")
             return None
                 
     def decode(self) -> bool:

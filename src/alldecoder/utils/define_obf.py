@@ -17,8 +17,8 @@ class DefineObfuscation:
             match = re.search(key, code)
 
             if match: 
-                print(f"Найдена обфускация! Название {value}")
+                print(f"Obfuscation found! Name: {value}")
                 return
     						
-        print("Обфускация не найдена.")
+            print("No obfuscation found.")
     								

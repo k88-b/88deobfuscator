@@ -42,7 +42,7 @@ class BaseDecodersClass(ABC):
                 f.write(content)
                 return True
         except Exception as e:
-            self.output.print_error(f"Не удалось записать контент в файл {file_name}: {e}")
+            self.output.print_error(f"Failed to write content to file {file_name}: {e}")
             return False
     
     def _read_file(self, file_name: str) -> str:
@@ -50,14 +50,14 @@ class BaseDecodersClass(ABC):
             with open(file_name, "r", encoding="utf-8") as f:
                     return f.read()
         except Exception as e:
-            self.output.print_error(f"Не удалось прочитать содержимое файла {file_name}: {e}")
+            self.output.print_error(f"Failed to read the contents of file {file_name}: {e}")
             raise SystemExit()
 
     def _cleanup(self) -> None:
         if os.path.exists(TEMP_DIR):
             shutil.rmtree(TEMP_DIR)
         else:
-            self.output.print_error("Директория .tempdir не удалена.")
+            self.output.print_error("Directory .tempdir was not deleted.")
 
     def _redirect_python_output(self, source_file: str, output_file: str) -> bool:
         try:
@@ -69,14 +69,14 @@ class BaseDecodersClass(ABC):
                 )
                 return True
         except Exception as e:
-            self.output.print_error(f"Не удалось перенаправить вывод из временного файла: {e}")
+            self.output.print_error(f"Failed to redirect output from the temporary file: {e}")
             return False
         
     def _match_obfuscation(self, pattern: str) -> bool:
         self.content = self._read_file(self.file_name)
         self.match = re.search(pattern, self.content)
         if not self.match:
-            self.output.print_error("Обфускация не обнаружена.")
+            self.output.print_error("Obfuscation not detected.")
             return False
         return True
 
@@ -89,7 +89,7 @@ class BaseDecodersClass(ABC):
                     self.COMMENTS_PATTERN, "", self.content
                 )
         except Exception as e:
-            self.output.print_error(f"Не удалось удалить комментарии: {e}")
+            self.output.print_error(f"Failed to remove comments: {e}")
 
     def _process_content(self) -> None:
         try: 
@@ -100,7 +100,7 @@ class BaseDecodersClass(ABC):
                     self.EXEC_PATTERN, lambda m: self.decode_layer(m.group(1)), self.content
                 )
         except Exception as e:
-            self.output.print_error(f"Не удалось обработать код на одном из слоев: {e}")
+            self.output.print_error(f"Failed to process code on one of the layers: {e}")
 
     def _write_result(self) -> None:
         try:
@@ -109,7 +109,7 @@ class BaseDecodersClass(ABC):
                 content=self.NOTE + self.content.strip()
             )            
         except Exception as e:
-            self.output.print_error(f"Не удалось записать финальный результат в файл: {e}")
+            self.output.print_error(f"Failed to write the final result to the file: {e}")
 
     def _capture_exec_output(self, content: str) -> str:
         namespace = {}

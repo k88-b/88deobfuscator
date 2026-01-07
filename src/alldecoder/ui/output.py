@@ -13,4 +13,4 @@ class CliOutput:
         print(BANNER)
 
     def print_error(self, text: str) -> None:
-        print(f"{self.RED}Ошибка! {text}{self.RESET}", file=sys.stderr)
+        print(f"{self.RED}Error! {text}{self.RESET}", file=sys.stderr)

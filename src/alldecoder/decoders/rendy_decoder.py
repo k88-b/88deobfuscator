@@ -30,11 +30,11 @@ class RendyDecoder(BaseDecodersClass):
                 return True
 
             else:
-                self.output.print_error("Не удалось получить результат из времменного файла.")
+                self.output.print_error("Failed to get the result from the temporary file.")
                 return False
 
         except Exception as e:
-            self.output.print_error(f"Не удалось деобфусцировать файл: {e}")
+            self.output.print_error(f"Failed to deobfuscate the file: {e}")
             return False
 
     

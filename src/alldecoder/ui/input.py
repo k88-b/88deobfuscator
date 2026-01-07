@@ -11,7 +11,7 @@ class CliInput:
 
     def get_function_choice(self) -> str | None:
         while True:
-            user_input = input("Ваш выбор: ").strip()
+            user_input = input("Your choice: ").strip()
             if user_input == "99":
                 return None
 
@@ -20,19 +20,19 @@ class CliInput:
             if user_input in valid_choices:
                 return user_input
             
-            self.output.print_error("Неверный выбор функции.")
+            self.output.print_error("Invalid function selection.")
             continue
 
     def get_file_name(self) -> Tuple[str, str] | None:
         while True:
-            file_name = input("Введите путь до файла: ").strip()
+            file_name = input("Enter file path: ").strip()
             if file_name == "99":
                 return None
             
             file_name = file_name + ".py" if not file_name.endswith(".py") else file_name
 
             if not os.path.exists(file_name):
-                self.output.print_error("Файл не существует. Введите 99 для выхода.")
+                self.output.print_error("File does not exist. Enter 99 to exit.")
                 continue
 
             new_base_name = f"{DECODED_FILE_PREFIX}{os.path.basename(file_name)}"

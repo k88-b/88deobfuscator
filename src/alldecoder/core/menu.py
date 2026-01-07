@@ -19,7 +19,7 @@ class DependencyChecker:
     def check_dependencies(output: CliOutput) -> None:
         if shutil.which("pycdc") is None:
             output.print_error(
-                "pycdc не найден в PATH\nСкачать https://github.com/zrax/pycdc\nНекоторые функции не будут работать. (Ne4toObf deobfuscator, ChristianObf deobfuscator)"
+                "pycdc not found in PATH.\nDownload it from https://github.com/zrax/pycdc\nSome features will be unavailable. (Ne4toObf deobfuscator, ChristianObf deobfuscator)"
             )
 
 
@@ -78,10 +78,10 @@ class Menu:
         )
         result = decoder.decode()
         if result:
-            print(f"Успешно деобфусцировано! Проверьте {new_file_name}")
+            print(f"Successfully deobfuscated! Check {new_file_name}")
         else:
-            self.output.print_error("Не удалось деобфусцировать.")
-    
+            self.output.print_error("Failed to deobfuscate.")
+             
     def run(self) -> None:
         self._show_menu()
 
