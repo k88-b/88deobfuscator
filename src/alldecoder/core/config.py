@@ -15,7 +15,7 @@ FUNCTIONS = """
 5  → Gzip          11 → B32+Gzip     17 → ChristianObf
 6  → Lzma          12 → B16+Gzip     18 → BlankOBFv2
 
-19 → ???  20 → Define Obf
+19 → CleverObf     20 → Define Obf
 99 → EXIT
 """
 

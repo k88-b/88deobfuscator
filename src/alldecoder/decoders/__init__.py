@@ -3,7 +3,8 @@ from .compression_decoder import CompressionUtilsDecoder
 from .baseX_compression_decoder import BaseCompressionUtilsDecoder
 from .blank_decoder import BlankObfDeobfuscator
 from .rendy_decoder import RendyDecoder
-from .christian_obf_decoder import ChristianObfDeobfuscator
+from .christian_decoder import ChristianObfDeobfuscator
+from .clever_decoder import CleverObfDeobfuscator
 
 __all__ = [
     "BaseDecoder",
@@ -12,4 +13,5 @@ __all__ = [
     "BlankObfDeobfuscator",
     "RendyDecoder",
     "ChristianObfDeobfuscator",
+    "CleverObfDeobfuscator"
 ]
