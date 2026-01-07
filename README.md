@@ -25,3 +25,6 @@ Deobfuscating ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
 </div>
 
 
+**Contact:**
+
+ - If you need help contact me on telegram: [@k88_w](https://t.me/k88_w)
