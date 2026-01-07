@@ -118,7 +118,6 @@ class BaseDecodersClass(ABC):
             exec(content, namespace, namespace)
         return f.getvalue().strip()
 
-
     def common_decode_logic(self, pattern: str, clean_pattern: str) -> bool:
         if not self._match_obfuscation(pattern):
             return False
