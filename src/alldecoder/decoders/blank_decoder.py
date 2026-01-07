@@ -87,8 +87,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool | None:
         try:
             if not self._match_obfuscation(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"):
-                self.output.print_error(f"The source file ({self.file_name}) is not obfuscated.")
-                return None
+                return False
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
                 "1": FirstLayer,
