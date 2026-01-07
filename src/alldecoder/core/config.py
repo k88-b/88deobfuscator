@@ -22,7 +22,7 @@ FUNCTIONS = """
 # -abstract_decoder.py config-
 NOTE = "# Deobfuscated with k88's tool \n# @k88_w\n\n"
 
-EXEC_PATTERN = r"exec\(\(_\)\(b'(.+?)'\)\)"
+EXEC_PATTERN = r"exec\(\(_\)\(b['\"](.+?)['\"]\)\)"
 
 COMMENTS_PATTERN = r"#(.*?)\n"
 
