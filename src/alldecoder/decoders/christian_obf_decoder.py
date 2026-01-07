@@ -20,7 +20,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
             else:
                 return False
         except Exception as e:
-            self.output.print_error(f"Не удалось проверить обфусцированный файл: {e}")
+            self.output.print_error(f"Failed to check the obfuscated file: {e}")
             raise
 
     def _extract_and_decompile(self) -> None:
@@ -29,14 +29,14 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
                 file_list = zip_ref.namelist()
                 if len(file_list) != 1:
                     raise ValueError(
-                        f"В архиве должен быть ровно 1 файл. Найдено: {len(file_list)}"
+                        f"The archive must contain exactly 1 file. Found: {len(file_list)}"
                     )
                 zip_ref.extract(self.COMPILED_FILE, self.TEMP_DIR)
                 compiled_file_path = self._get_temp_path(self.COMPILED_FILE)
                 with open(self.temp_file_path, "w") as f:
                     subprocess.run(["pycdc", compiled_file_path], text=True, stdout=f)
         except Exception as e:
-            self.output.print_error(f"Не удалось деобфусцировать 1 слой: {e}")
+            self.output.print_error(f"Failed to deobfuscate first layer: {e}")
 
     def _deobfuscate_layer(self) -> None:
         try:
@@ -52,12 +52,12 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
             self.content = self._capture_exec_output(self.content)
 
         except Exception as e:
-            self.output.print_error(f"Не удалось деобфусцировать один из слоев: {e}")
+            self.output.print_error(f"Failed to deobfuscate one of the layers: {e}")
 
     def decode(self) -> Optional[bool]:
         try:
             if not self._check_input_file():
-                self.output.print_error(f"Исходный файл ({self.file_name}) не обфусцирован.")
+                self.output.print_error(f"The source file ({self.file_name}) is not obfuscated.")
                 raise SystemExit()
 
             self._extract_and_decompile()
@@ -69,7 +69,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
             return True
 
         except Exception as e:
-            self.output.print_error(f"Не удалось деофбусцировать файл: {e}")
+            self.output.print_error(f"Failed to deobfuscate the file: {e}")
             return None
 
         finally:

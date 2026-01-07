@@ -8,6 +8,7 @@ from typing import Type
 from ui.output import CliOutput 
 from decoders.abstract_decoder import BaseDecodersClass
 
+
 class Decoder(ABC):
     def __init__(self, cli_output: CliOutput, content: str = "") -> None:
         self.content = content
@@ -60,7 +61,7 @@ class ThirdLayer(Decoder):
         if match:
             ip_table_name = match.group(1)
         else:
-            raise ValueError("Не удалось найти ip_table.")
+            raise ValueError("Failed to find ip_table.")
 
         self.content = self.content.strip().split("\n")
         self.content[-1] = f"\ndata = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
@@ -86,7 +87,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool | None:
         try:
             if not self._match_obfuscation(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"):
-                self.output.print_error(f"Исходный файл ({self.file_name}) не обфусцирован.")
+                self.output.print_error(f"The source file ({self.file_name}) is not obfuscated.")
                 return None
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
@@ -96,13 +97,12 @@ class BlankObfDeobfuscator(BaseDecodersClass):
             }
             try:
                 while (layer := self._define_layer()) is not None:
-                    print(f"Деобфускация слоя: {layer}")
                     layer_decoder = layer_classes_dict[layer](content=self.content, cli_output=self.output)
                     self.content = layer_decoder.deobfuscate()
 
             except Exception as e:
                 self.output.print_error(
-                    f"Дебфускация слоя {layer_decoder.__class__.__name__} не удалась: {e}"
+                    f"Deobfuscation of layer {layer_decoder.__class__.__name__} failed: {e}"
                 )
                 return None
 

@@ -16,7 +16,7 @@ class CompressionUtilsDecoder(BaseDecodersClass):
             return result.decode()
 
         except Exception as e:
-            self.output.print_error(f"Не удалось декодировать слой: {e}")
+            self.output.print_error(f"Failed to decode the layer: {e}")
             return None
         
     def decode(self) -> bool:
@@ -36,6 +36,6 @@ class CompressionUtilsDecoder(BaseDecodersClass):
                 clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);"
             )
         except Exception as e:
-            self.output.print_error(f"Не удалось деобфусцировать файл: {e}")
+            self.output.print_error(f"Failed to deobfuscate the file: {e}")
             return False
 
