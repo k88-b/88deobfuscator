@@ -9,7 +9,8 @@ from decoders import (
     BlankObfDeobfuscator,
     RendyDecoder,
     ChristianObfDeobfuscator,
-    CleverObfDeobfuscator
+    CleverObfDeobfuscator,
+    GrandioseeObfDeobfuscator
 )
 from utils import DefineObfuscation
 from core.config import FUNCTIONS
@@ -45,7 +46,8 @@ class Menu:
         "17": ChristianObfDeobfuscator,            
         "18": BlankObfDeobfuscator,
         "19": CleverObfDeobfuscator,
-        "20": DefineObfuscation
+        "20": GrandioseeObfDeobfuscator,
+        "21": DefineObfuscation
     }
 
     def __init__(self):
@@ -63,7 +65,7 @@ class Menu:
             raise SystemExit()
 
     def _process_user_choice(self, user_choice: str, file_name: str, new_file_name: str) -> None:
-        if user_choice == "20":
+        if user_choice == "21":
             definer = DefineObfuscation(
                 file_name=file_name,
                 cli_output=self.output
