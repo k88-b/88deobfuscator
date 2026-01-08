@@ -4,7 +4,7 @@
 - **Base:** base64, base32, base16
 - **Compressions:** zlib, gzip, lzma
 - **Combinations:** base + compression
-- **Alana:** GrandioseeObf, CleverObf
+- **Alana:** GrandioseeObf, CleverObf, XindexObf
 - **Specific:** RendyObf, BlankObfv2, ChristianObf
 - **Auto-detection:** automatic recognition of the obfuscation type
 

@@ -6,6 +6,7 @@ from .rendy_decoder import RendyDecoder
 from .christian_decoder import ChristianObfDeobfuscator
 from .clever_decoder import CleverObfDeobfuscator
 from .grandiosee_decoder import GrandioseeObfDeobfuscator
+from .xindex_decoder import XindexObfDeobfuscator
 
 __all__ = [
     "BaseDecoder",
@@ -15,5 +16,6 @@ __all__ = [
     "RendyDecoder",
     "ChristianObfDeobfuscator",
     "CleverObfDeobfuscator",
-    "GrandioseeObfDeobfuscator"
+    "GrandioseeObfDeobfuscator",
+    "XindexObfDeobfuscator"
 ]
