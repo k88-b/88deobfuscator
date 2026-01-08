@@ -22,10 +22,11 @@ Deobfuscating ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
 
 <div align="left">
   <img src="https://github.com/user-attachments/assets/b29407e1-0928-4725-9d78-48fb79c4c6c8" width="45%" />
-  <img src="https://github.com/user-attachments/assets/8c666492-0156-4e22-b1e4-b38a30e787c7" width="45%" />
+  <img src="https://github.com/user-attachments/assets/16244ebd-35a9-44eb-915f-b8d6c7f26054" width="45%" />
 </div>
 
 
 **Contact:**
 
  - If you need help contact me on telegram: [@k88_w](https://t.me/k88_w)
+
