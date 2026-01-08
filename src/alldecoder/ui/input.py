@@ -15,7 +15,7 @@ class CliInput:
             if user_input == "99":
                 return None
 
-            valid_choices = [str(i) for i in range(1, 21)]
+            valid_choices = [str(i) for i in range(1, 22)] + ["88"]
 
             if user_input in valid_choices:
                 return user_input
