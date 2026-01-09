@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 
 class GrandioseeObfDeobfuscator(BaseDecodersClass):
@@ -23,7 +23,7 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
     def _get_decode_logic(self) -> str:
         try:
             temp_content = self.content + f"print({self.arg_0});print({self.arg_1})"
-            output = self._capture_exec_output(temp_content)            
+            output = self.code_executor.capture_exec_output(temp_content)            
             output = output.replace(self.exec_wrapper, "print")
             return output
         except Exception as e:
@@ -36,7 +36,12 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            if not self._match_obfuscation(self.SOURCE_PATTERN):
+            self.match = self.pattern_matcher.match_obfuscation(
+                self.SOURCE_PATTERN,
+                content=self.content,
+                return_match=True
+            )
+            if not self.match:
                 return False
 
             self._extract_components()
@@ -49,7 +54,7 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
             self._clean_content()
             
-            self.content = self._capture_exec_output(self.content)
+            self.content = self.code_executor.capture_exec_output(self.content)
             self._write_result()            
             return True
             

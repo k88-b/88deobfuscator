@@ -7,7 +7,7 @@ import lzma
 import zlib
 import base64
 import re
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 
 class RendyDecoder(BaseDecodersClass):
@@ -22,7 +22,12 @@ class RendyDecoder(BaseDecodersClass):
 
     def decode(self):
         try:
-            if not self._match_obfuscation(self.SOURCE_PATTERN):
+            self.match = self.pattern_matcher.match_obfuscation(
+                self.SOURCE_PATTERN,
+                content=self.content,
+                return_match=True
+            )
+            if not self.match:
                 return False
                 
             encoded = self.match.group(1)
@@ -33,7 +38,7 @@ class RendyDecoder(BaseDecodersClass):
             self.content = gzip.decompress(self.content)                   
             self.content = marshal.loads(self.content).decode()
                   
-            self._remove_comments()
+            self.content = self.pattern_matcher.remove_comments(self.content)
             if self.content:
                 self._write_result()
                 return True

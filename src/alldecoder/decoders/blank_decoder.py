@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import re
-import io
 from abc import ABC, abstractmethod
-from contextlib import redirect_stdout
 from typing import Type
 from ui.output import CliOutput 
-from decoders.abstract_decoder import BaseDecodersClass
-
+from core.abstract_decoder import BaseDecodersClass
+from core.code_executor import CodeExecutor
 
 class Decoder(ABC):
-    def __init__(self, cli_output: CliOutput, content: str = "") -> None:
+    def __init__(
+        self,
+        cli_output: CliOutput,
+        code_executor: CodeExecutor,
+        content: str = ""
+    ) -> None:
         self.content = content
         self.output = cli_output
-
-    def _capture_exec_output(self) -> str:
-        namespace = {}
-        f = io.StringIO()
-        with redirect_stdout(f):
-            exec(self.content, namespace, namespace)
-        return f.getvalue().strip()
+        self.code_executor = code_executor
 
     def _replace_bytes(self) -> None:
         self.content = self.content.replace(
@@ -40,7 +37,7 @@ class FirstLayer(Decoder):
             ")).decode())"
         )
         
-        return self._capture_exec_output()
+        return self.code_executor.capture_exec_output(self.content)
 
 
 class SecondLayer(Decoder):
@@ -51,7 +48,7 @@ class SecondLayer(Decoder):
             "]))).decode())"
         )
 
-        return self._capture_exec_output()
+        return self.code_executor.capture_exec_output(self.content)
 
 
 class ThirdLayer(Decoder):
@@ -67,10 +64,10 @@ class ThirdLayer(Decoder):
         self.content[-1] = f"\ndata = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
         self.content = "\n".join(self.content)
 
-        return self._capture_exec_output()
+        return self.code_executor.capture_exec_output(self.content)
 
 class BlankObfDeobfuscator(BaseDecodersClass):
-    SOURCE_PATEERN = re.compile(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)")
+    SOURCE_PATTERN = re.compile(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)")
     
     def _define_layer(self) -> str | None:
         layer = self.content
@@ -88,7 +85,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            if not self._match_obfuscation(self.SOURCE_PATTERN):
+            if not self.pattern_matcher.match_obfuscation(self.SOURCE_PATTERN, content=self.content):
                 return False
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
@@ -96,9 +93,16 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                 "2": SecondLayer,
                 "3": ThirdLayer,
             }
+            
+            layer_decoder = None
+
             try:
                 while (layer := self._define_layer()) is not None:
-                    layer_decoder = layer_classes_dict[layer](content=self.content, cli_output=self.output)
+                    layer_decoder = layer_classes_dict[layer](
+                        content=self.content,
+                        cli_output=self.output,
+                        code_executor=self.code_executor
+                    )
                     self.content = layer_decoder.deobfuscate()
 
             except Exception as e:

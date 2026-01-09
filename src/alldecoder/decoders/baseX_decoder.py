@@ -2,7 +2,7 @@
 
 import base64
 from typing import Optional
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 class BaseDecoder(BaseDecodersClass):
     def decode_layer(self, encoded_str: str) -> Optional[str]:

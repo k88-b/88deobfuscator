@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 class CleverObfDeobfuscator(BaseDecodersClass):
     SOURCE_PATTERN = re.compile(
@@ -14,13 +14,13 @@ class CleverObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            if not self._match_obfuscation(self.SOURCE_PATTERN):
+            if not self.pattern_matcher.match_obfuscation(self.SOURCE_PATTERN, content=self.content):
                 return False
-
+            
             crack_code = "print(_lIllIlIII)"
           
             self.content = self.SOURCE_PATTERN.sub(crack_code, self.content)
-            self.content = self._capture_exec_output(self.content)
+            self.content = self.code_executor.capture_exec_output(self.content)
 
             self._write_result()            
             return True
