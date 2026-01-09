@@ -4,6 +4,11 @@ import re
 from decoders.abstract_decoder import BaseDecodersClass
 
 class XindexObfDeobfuscator(BaseDecodersClass):
+    SOURCE_PATTERN = re.compile(
+        r"\w+\(\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\)"
+        r"\s*\(\s*\w+\s*\(\s*[\"']([0-9|]+)[\"']\s*\)\s*\)"
+    )
+
     def _decode_string(self, encoded: str) -> str:
         result = []
         for part in encoded.split("|"):
@@ -13,11 +18,7 @@ class XindexObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            source_pattern = re.compile(
-                r"\w+\(\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\)"
-                r"\s*\(\s*\w+\s*\(\s*[\"']([0-9|]+)[\"']\s*\)\s*\)"
-            )
-            if not self._match_obfuscation(source_pattern):
+            if not self._match_obfuscation(self.SOURCE_PATTERN):
                 return False
 
             encoded_string = self.match.group(1)

@@ -70,6 +70,8 @@ class ThirdLayer(Decoder):
         return self._capture_exec_output()
 
 class BlankObfDeobfuscator(BaseDecodersClass):
+    SOURCE_PATEERN = re.compile(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)")
+    
     def _define_layer(self) -> str | None:
         layer = self.content
         if (
@@ -86,7 +88,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            if not self._match_obfuscation(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"):
+            if not self._match_obfuscation(self.SOURCE_PATTERN):
                 return False
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
