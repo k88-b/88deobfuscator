@@ -7,6 +7,7 @@ from .christian_decoder import ChristianObfDeobfuscator
 from .clever_decoder import CleverObfDeobfuscator
 from .grandiosee_decoder import GrandioseeObfDeobfuscator
 from .xindex_decoder import XindexObfDeobfuscator
+from .impostor_decoder import ImpostorObfDeobfuscator
 
 __all__ = [
     "BaseDecoder",
@@ -17,5 +18,6 @@ __all__ = [
     "ChristianObfDeobfuscator",
     "CleverObfDeobfuscator",
     "GrandioseeObfDeobfuscator",
-    "XindexObfDeobfuscator"
+    "XindexObfDeobfuscator",
+    "ImpostorObfDeobfuscator"
 ]

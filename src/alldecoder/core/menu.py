@@ -11,7 +11,8 @@ from decoders import (
     ChristianObfDeobfuscator,
     CleverObfDeobfuscator,
     GrandioseeObfDeobfuscator,
-    XindexObfDeobfuscator
+    XindexObfDeobfuscator,
+    ImpostorObfDeobfuscator
 )
 from utils import DefineObfuscation
 from core.config import FUNCTIONS
@@ -49,6 +50,7 @@ class Menu:
         "19": CleverObfDeobfuscator,
         "20": GrandioseeObfDeobfuscator,
         "21": XindexObfDeobfuscator,
+        "22": ImpostorObfDeobfuscator,
         "88": DefineObfuscation
     }
 

@@ -16,6 +16,7 @@ FUNCTIONS = """
 6  → Lzma          12 → B16+Gzip      18 → BlankOBFv2
 
 19 → CleverObf     20 → GrandioseeObf 21 → XindexObf
+22 → ImpostorObf
 88 → Define Obf
 99 → EXIT
 """

@@ -5,7 +5,7 @@
 - **Compressions:** zlib, gzip, lzma
 - **Combinations:** base + compression
 - **Alana:** GrandioseeObf, CleverObf, XindexObf
-- **Specific:** RendyObf, BlankObfv2, ChristianObf
+- **Specific:** RendyObf, BlankObfv2, ChristianObf, ImpostorObf
 - **Auto-detection:** automatic recognition of the obfuscation type
 
 
