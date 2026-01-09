@@ -1,5 +1,4 @@
 import re
-from ui.output import CliOutput 
 from decoders.abstract_decoder import BaseDecodersClass
 
 class XindexObfDeobfuscator(BaseDecodersClass):
