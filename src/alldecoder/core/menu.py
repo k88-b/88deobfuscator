@@ -16,6 +16,9 @@ from decoders import (
 )
 from utils import DefineObfuscation
 from core.config import FUNCTIONS
+from core.file_manager import FileManager
+from core.code_executor import CodeExecutor
+from core.pattern_matcher import PatternMatcher
 
 
 class DependencyChecker:
@@ -56,7 +59,10 @@ class Menu:
 
     def __init__(self):
         self.output = CliOutput()
-        self.input = CliInput(self.output) 
+        self.input = CliInput(self.output)
+        self.file_manager = FileManager(self.output)
+        self.code_executor = CodeExecutor(self.output)
+        self.pattern_matcher = PatternMatcher(cli_output=self.output)
 
     def _show_menu(self) -> None:
         self.output.print_banner()
@@ -72,7 +78,8 @@ class Menu:
         if user_choice == "88":
             definer = DefineObfuscation(
                 file_name=file_name,
-                cli_output=self.output
+                cli_output=self.output,
+                file_manager=self.file_manager
             )
             definer.define_obfuscation() 
             return
@@ -82,7 +89,10 @@ class Menu:
             file_name=file_name,
             new_file_name=new_file_name,
             user_choice=user_choice,
-            cli_output=self.output
+            cli_output=self.output,
+            file_manager=self.file_manager,
+            code_executor=self.code_executor,
+            pattern_matcher=self.pattern_matcher
         )
         result = decoder.decode()
         if result:

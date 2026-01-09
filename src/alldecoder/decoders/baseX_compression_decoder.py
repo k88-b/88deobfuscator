@@ -5,7 +5,7 @@ import gzip
 import lzma
 import zlib
 from typing import Optional
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 
 class BaseCompressionUtilsDecoder(BaseDecodersClass):

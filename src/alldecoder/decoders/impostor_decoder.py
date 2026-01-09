@@ -8,7 +8,7 @@ import re
 from types import CodeType
 from typing import Optional
 
-from decoders.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecodersClass
 
 
 class ImpostorObfDeobfuscator(BaseDecodersClass):
@@ -85,7 +85,12 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> Optional[bool]:
         try:
-            if not self._match_obfuscation(self.SOURCE_PATTERN):
+            self.match = self.pattern_matcher.match_obfuscation(
+                self.SOURCE_PATTERN,
+                content=self.content,
+                return_match=True
+            )
+            if not self.match:
                 return False
 
             print("\nWARNING: Deobfuscator should be run using the same Python version that was used for obfuscation")
