@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 from decoders.abstract_decoder import BaseDecodersClass
 
