@@ -6,14 +6,23 @@ import gzip
 import lzma
 import zlib
 import base64
+import re
 from decoders.abstract_decoder import BaseDecodersClass
 
 
 class RendyDecoder(BaseDecodersClass):
+    SOURCE_PATTERN = re.compile(
+        r"_=lambda __:__import__\('marshal'\)\.loads\("
+        r"__import__\('gzip'\)\.decompress\("
+        r"__import__\('lzma'\)\.decompress\("
+        r"__import__\('zlib'\)\.decompress\("
+        r"__import__\('base64'\)\.b64decode\("
+        r"__\[::-1\]\)\)\)\)\);exec\(_\('(.*?)'\)\)"
+    )
+
     def decode(self):
         try:
-            pattern = r"_=lambda __:__import__\('marshal'\)\.loads\(__import__\('gzip'\)\.decompress\(__import__\('lzma'\)\.decompress\(__import__\('zlib'\)\.decompress\(__import__\('base64'\)\.b64decode\(__\[::-1\]\)\)\)\)\);exec\(_\('(.*?)'\)\)"
-            if not self._match_obfuscation(pattern):
+            if not self._match_obfuscation(self.SOURCE_PATTERN):
                 return False
                 
             encoded = self.match.group(1)

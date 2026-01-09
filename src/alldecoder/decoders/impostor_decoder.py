@@ -12,7 +12,7 @@ from decoders.abstract_decoder import BaseDecodersClass
 
 
 class ImpostorObfDeobfuscator(BaseDecodersClass):
-    OBFUSCATION_PATTERN = (
+    SOURCE_PATTERN = re.compile(
         r"(\.b(?:16|64)decode\([^)]+\))"
         r"|(eval\s*\([^)]*chr\([^)]+\))"
         r"|(exec\s*\([^)]*__globals[^)]*\))"
@@ -85,7 +85,7 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> Optional[bool]:
         try:
-            if not self._match_obfuscation(self.OBFUSCATION_PATTERN):
+            if not self._match_obfuscation(self.SOURCE_PATTERN):
                 return False
 
             print("\nWARNING: Deobfuscator should be run using the same Python version that was used for obfuscation")
