@@ -3,16 +3,14 @@
 import re
 from abc import ABC, abstractmethod
 from typing import Type
-from ui.output import CliOutput 
+from ui.output import CliOutput
 from core.abstract_decoder import BaseDecodersClass
 from core.code_executor import CodeExecutor
 
+
 class Decoder(ABC):
     def __init__(
-        self,
-        cli_output: CliOutput,
-        code_executor: CodeExecutor,
-        content: str = ""
+        self, cli_output: CliOutput, code_executor: CodeExecutor, content: str = ""
     ) -> None:
         self.content = content
         self.output = cli_output
@@ -20,8 +18,7 @@ class Decoder(ABC):
 
     def _replace_bytes(self) -> None:
         self.content = self.content.replace(
-            "99, 101, 120, 101",
-            "116, 110, 105, 114, 112"
+            "99, 101, 120, 101", "116, 110, 105, 114, 112"
         )
 
     @abstractmethod
@@ -32,21 +29,15 @@ class Decoder(ABC):
 class FirstLayer(Decoder):
     def deobfuscate(self) -> str:
         self._replace_bytes()
-        self.content = self.content.replace(
-            ")))", 
-            ")).decode())"
-        )
-        
+        self.content = self.content.replace(")))", ")).decode())")
+
         return self.code_executor.capture_exec_output(self.content)
 
 
 class SecondLayer(Decoder):
     def deobfuscate(self):
         self._replace_bytes()
-        self.content = self.content.replace(
-            "]))))", 
-            "]))).decode())"
-        )
+        self.content = self.content.replace("]))))", "]))).decode())")
 
         return self.code_executor.capture_exec_output(self.content)
 
@@ -61,14 +52,19 @@ class ThirdLayer(Decoder):
             raise ValueError("Failed to find ip_table.")
 
         self.content = self.content.strip().split("\n")
-        self.content[-1] = f"\ndata = list([int(x) for item in [value.split(\".\") for value in {ip_table_name}] for x in item])\nprint(__import__(\"zlib\").decompress(__import__(\"base64\").b64decode(bytes(data))).decode())"
+        self.content[-1] = (
+            f'\ndata = list([int(x) for item in [value.split(".") for value in {ip_table_name}] for x in item])\nprint(__import__("zlib").decompress(__import__("base64").b64decode(bytes(data))).decode())'
+        )
         self.content = "\n".join(self.content)
 
         return self.code_executor.capture_exec_output(self.content)
 
+
 class BlankObfDeobfuscator(BaseDecodersClass):
-    SOURCE_PATTERN = re.compile(r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)")
-    
+    SOURCE_PATTERN = re.compile(
+        r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"
+    )
+
     def _define_layer(self) -> str | None:
         layer = self.content
         if (
@@ -85,7 +81,9 @@ class BlankObfDeobfuscator(BaseDecodersClass):
 
     def decode(self) -> bool | None:
         try:
-            if not self.pattern_matcher.match_obfuscation(self.SOURCE_PATTERN, content=self.content):
+            if not self.pattern_matcher.match_obfuscation(
+                self.SOURCE_PATTERN, content=self.content
+            ):
                 return False
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
@@ -93,7 +91,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                 "2": SecondLayer,
                 "3": ThirdLayer,
             }
-            
+
             layer_decoder = None
 
             try:
@@ -101,7 +99,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                     layer_decoder = layer_classes_dict[layer](
                         content=self.content,
                         cli_output=self.output,
-                        code_executor=self.code_executor
+                        code_executor=self.code_executor,
                     )
                     self.content = layer_decoder.deobfuscate()
 
@@ -117,6 +115,3 @@ class BlankObfDeobfuscator(BaseDecodersClass):
         except Exception as e:
             self.output.print_error(e)
             return None
-
-
-                    

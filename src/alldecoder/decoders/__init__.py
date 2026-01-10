@@ -19,5 +19,5 @@ __all__ = [
     "CleverObfDeobfuscator",
     "GrandioseeObfDeobfuscator",
     "XindexObfDeobfuscator",
-    "ImpostorObfDeobfuscator"
+    "ImpostorObfDeobfuscator",
 ]

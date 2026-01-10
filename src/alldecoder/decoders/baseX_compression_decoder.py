@@ -21,7 +21,7 @@ class BaseCompressionUtilsDecoder(BaseDecodersClass):
         except Exception as e:
             self.output.print_error(f"Failed to decode the layer: {e}")
             return None
-                
+
     def decode(self) -> bool:
         try:
             choices = {
@@ -71,10 +71,10 @@ class BaseCompressionUtilsDecoder(BaseDecodersClass):
                     lzma,
                 ),
             }
-            
+
             pattern, self.special, self.algorithm = choices[self.user_choice]
             return self.common_decode_logic(
-                pattern=pattern, 
+                pattern=pattern,
                 clean_pattern=f"_ = lambda __ : __import__('{self.algorithm.__name__}').decompress(__import__('base64').{self.special.__name__}(__[::-1]));",
             )
         except Exception as e:

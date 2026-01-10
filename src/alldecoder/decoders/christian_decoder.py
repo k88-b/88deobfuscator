@@ -6,7 +6,6 @@ import subprocess
 from ctypes import pythonapi
 from typing import Optional
 from core.abstract_decoder import BaseDecodersClass
-from core.config import CHRISTIAN_OBF_TEMPLATE_PREFIX as TEMPLATE_PREFIX
 
 
 class ChristianObfDeobfuscator(BaseDecodersClass):
@@ -33,8 +32,10 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
                     raise ValueError(
                         f"The archive must contain exactly 1 file. Found: {len(file_list)}"
                     )
-                zip_ref.extract(self.COMPILED_FILE, self.TEMP_DIR)
-                compiled_file_path = self.file_manager.get_temp_path(self.COMPILED_FILE)
+                zip_ref.extract(self.config.COMPILED_FILE, self.config.TEMP_DIR)
+                compiled_file_path = self.file_manager.get_temp_path(
+                    self.config.COMPILED_FILE
+                )
                 with open(self.temp_file_path, "w") as f:
                     subprocess.run(["pycdc", compiled_file_path], text=True, stdout=f)
         except Exception as e:
@@ -42,15 +43,16 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
 
     def _deobfuscate_layer(self) -> None:
         try:
+
             def hooked_exec(code, globals=None, locals=None) -> None:
                 code = code.decode()
-                if TEMPLATE_PREFIX in code:
-                    print(code.replace(TEMPLATE_PREFIX, ""))
+                if self.config.CHRISTIAN_OBF_TEMPLATE_PREFIX in code:
+                    print(code.replace(self.config.CHRISTIAN_OBF_TEMPLATE_PREFIX, ""))
                 else:
                     print(code)
-                
+
             pythonapi.PyRun_SimpleString = hooked_exec
-      
+
             self.content = self.code_executor.capture_exec_output(self.content)
 
         except Exception as e:
@@ -59,7 +61,9 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> Optional[bool]:
         try:
             if not self._check_input_file():
-                self.output.print_error(f"The source file ({self.file_name}) is not obfuscated.")
+                self.output.print_error(
+                    f"The source file ({self.file_name}) is not obfuscated."
+                )
                 raise SystemExit()
 
             self.file_manager.create_temp_dir()
