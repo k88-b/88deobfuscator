@@ -3,6 +3,7 @@
 import re
 from core.abstract_decoder import BaseDecodersClass
 
+
 class XindexObfDeobfuscator(BaseDecodersClass):
     SOURCE_PATTERN = re.compile(
         r"\w+\(\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\)"
@@ -19,9 +20,7 @@ class XindexObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool | None:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.SOURCE_PATTERN,
-                content=self.content,
-                return_match=True
+                self.SOURCE_PATTERN, content=self.content, return_match=True
             )
             if not self.match:
                 return False
@@ -29,9 +28,9 @@ class XindexObfDeobfuscator(BaseDecodersClass):
             encoded_string = self.match.group(1)
             self.content = self._decode_string(encoded_string)
             self._write_result()
-            
+
             return True
-            
+
         except Exception as e:
             self.output.print_error(e)
             return None

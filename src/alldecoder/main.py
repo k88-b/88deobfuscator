@@ -3,14 +3,14 @@
 
 from core.menu import Menu
 
+
 def main():
     menu = Menu()
     menu.run()
-        
-if __name__ == "__main__":  
+
+
+if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         print("\nExiting.")
-        
-        

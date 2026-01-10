@@ -12,10 +12,10 @@ from decoders import (
     CleverObfDeobfuscator,
     GrandioseeObfDeobfuscator,
     XindexObfDeobfuscator,
-    ImpostorObfDeobfuscator
+    ImpostorObfDeobfuscator,
 )
 from utils import DefineObfuscation
-from core.config import FUNCTIONS
+from core.config import AppConfig
 from core.file_manager import FileManager
 from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
@@ -48,42 +48,46 @@ class Menu:
         "14": BaseCompressionUtilsDecoder,
         "15": BaseCompressionUtilsDecoder,
         "16": RendyDecoder,
-        "17": ChristianObfDeobfuscator,            
+        "17": ChristianObfDeobfuscator,
         "18": BlankObfDeobfuscator,
         "19": CleverObfDeobfuscator,
         "20": GrandioseeObfDeobfuscator,
         "21": XindexObfDeobfuscator,
         "22": ImpostorObfDeobfuscator,
-        "88": DefineObfuscation
+        "88": DefineObfuscation,
     }
 
     def __init__(self):
-        self.output = CliOutput()
-        self.input = CliInput(self.output)
-        self.file_manager = FileManager(self.output)
+        self.config = AppConfig()
+        self.output = CliOutput(self.config)
+        self.input = CliInput(self.output, self.config)
+        self.file_manager = FileManager(self.output, self.config)
         self.code_executor = CodeExecutor(self.output)
-        self.pattern_matcher = PatternMatcher(cli_output=self.output)
+        self.pattern_matcher = PatternMatcher(self.output, self.config)
 
     def _show_menu(self) -> None:
         self.output.print_banner()
         DependencyChecker.check_dependencies(self.output)
-        print(FUNCTIONS)
+        print(self.config.FUNCTIONS)
 
     def _check_user_input(self, value: str | None) -> None:
         if value is None:
             print("Выход.")
             raise SystemExit()
 
-    def _process_user_choice(self, user_choice: str, file_name: str, new_file_name: str) -> None:
+    def _process_user_choice(
+        self, user_choice: str, file_name: str, new_file_name: str
+    ) -> None:
         if user_choice == "88":
             definer = DefineObfuscation(
                 file_name=file_name,
                 cli_output=self.output,
-                file_manager=self.file_manager
+                file_manager=self.file_manager,
+                config=self.config,
             )
-            definer.define_obfuscation() 
+            definer.define_obfuscation()
             return
-            
+
         decoder_class = self.DECODER_MAP[user_choice]
         decoder = decoder_class(
             file_name=file_name,
@@ -92,29 +96,26 @@ class Menu:
             cli_output=self.output,
             file_manager=self.file_manager,
             code_executor=self.code_executor,
-            pattern_matcher=self.pattern_matcher
+            pattern_matcher=self.pattern_matcher,
+            config=self.config,
         )
         result = decoder.decode()
         if result:
             print(f"Successfully deobfuscated! Check {new_file_name}")
         else:
             self.output.print_error("Failed to deobfuscate.")
-             
+
     def run(self) -> None:
         self._show_menu()
 
         user_choice = self.input.get_function_choice()
         self._check_user_input(user_choice)
-        
+
         file_data = self.input.get_file_name()
         self._check_user_input(file_data)
 
         file_name, new_file_name = file_data
-            
-        self._process_user_choice(
-            user_choice=user_choice,
-            file_name=file_name,
-            new_file_name=new_file_name
-        )
-        
 
+        self._process_user_choice(
+            user_choice=user_choice, file_name=file_name, new_file_name=new_file_name
+        )

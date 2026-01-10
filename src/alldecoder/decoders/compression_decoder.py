@@ -6,7 +6,8 @@ import gzip
 import lzma
 from typing import Optional
 from core.abstract_decoder import BaseDecodersClass
- 
+
+
 class CompressionUtilsDecoder(BaseDecodersClass):
     def decode_layer(self, encoded_str: str) -> Optional[str]:
         try:
@@ -18,9 +19,9 @@ class CompressionUtilsDecoder(BaseDecodersClass):
         except Exception as e:
             self.output.print_error(f"Failed to decode the layer: {e}")
             return None
-        
+
     def decode(self) -> bool:
-        try:            
+        try:
             if self.user_choice == "4":
                 pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(__\[::-1\]\);exec\(\(_\)\(b'(.*?)'\)\)"
                 self.algorithm = "zlib"
@@ -33,9 +34,8 @@ class CompressionUtilsDecoder(BaseDecodersClass):
 
             return self.common_decode_logic(
                 pattern=pattern,
-                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);"
+                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);",
             )
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate the file: {e}")
             return False
-

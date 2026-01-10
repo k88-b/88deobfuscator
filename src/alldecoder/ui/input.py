@@ -2,12 +2,14 @@
 
 import os
 from typing import Tuple
-from core.config import DECODED_FILE_PREFIX
+from core.config import AppConfig, default_config
 from ui.output import CliOutput
 
+
 class CliInput:
-    def __init__(self, cli_output: CliOutput):
+    def __init__(self, cli_output: CliOutput, config: AppConfig | None = None):
         self.output = cli_output
+        self.config = config or default_config
 
     def get_function_choice(self) -> str | None:
         while True:
@@ -19,7 +21,7 @@ class CliInput:
 
             if user_input in valid_choices:
                 return user_input
-            
+
             self.output.print_error("Invalid function selection.")
             continue
 
@@ -28,17 +30,18 @@ class CliInput:
             file_name = input("Enter file path: ").strip()
             if file_name == "99":
                 return None
-            
-            file_name = file_name + ".py" if not file_name.endswith(".py") else file_name
+
+            file_name = (
+                file_name + ".py" if not file_name.endswith(".py") else file_name
+            )
 
             if not os.path.exists(file_name):
                 self.output.print_error("File does not exist. Enter 99 to exit.")
                 continue
 
-            new_base_name = f"{DECODED_FILE_PREFIX}{os.path.basename(file_name)}"
-            new_file_name = os.path.join(
-                os.path.dirname(file_name), new_base_name
+            new_base_name = (
+                f"{self.config.DECODED_FILE_PREFIX}{os.path.basename(file_name)}"
             )
+            new_file_name = os.path.join(os.path.dirname(file_name), new_base_name)
 
-            
             return file_name, new_file_name
