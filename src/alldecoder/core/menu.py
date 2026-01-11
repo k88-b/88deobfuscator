@@ -15,7 +15,7 @@ from decoders import (
     ImpostorObfDeobfuscator,
 )
 from utils import DefineObfuscation
-from core.config import AppConfig
+from core.config import AppConfig, default_config
 from core.file_manager import FileManager
 from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
@@ -57,13 +57,21 @@ class Menu:
         "88": DefineObfuscation,
     }
 
-    def __init__(self):
-        self.config = AppConfig()
-        self.output = CliOutput(self.config)
-        self.input = CliInput(self.output, self.config)
-        self.file_manager = FileManager(self.output, self.config)
-        self.code_executor = CodeExecutor(self.output)
-        self.pattern_matcher = PatternMatcher(self.output, self.config)
+    def __init__(
+        self,
+        cli_output: CliOutput,
+        cli_input: CliInput,
+        file_manager: FileManager,
+        pattern_matcher: PatternMatcher,
+        code_executor: CodeExecutor,
+        config: AppConfig | None = None    
+    ):
+        self.config = config or default_config
+        self.output = cli_output
+        self.input = cli_input
+        self.file_manager = file_manager
+        self.code_executor = code_executor
+        self.pattern_matcher = pattern_matcher
 
     def _show_menu(self) -> None:
         self.output.print_banner()
