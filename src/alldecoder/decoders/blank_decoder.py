@@ -79,7 +79,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
         else:
             return None
 
-    def decode(self) -> bool | None:
+    def decode(self) -> bool:
         try:
             if not self.pattern_matcher.match_obfuscation(
                 self.SOURCE_PATTERN, content=self.content
@@ -114,4 +114,4 @@ class BlankObfDeobfuscator(BaseDecodersClass):
 
         except Exception as e:
             self.output.print_error(e)
-            return None
+            return False

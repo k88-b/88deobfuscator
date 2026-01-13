@@ -17,7 +17,7 @@ class XindexObfDeobfuscator(BaseDecodersClass):
                 result.append(chr(int(part[5:]) - int(part[:5])))
         return "".join(result)
 
-    def decode(self) -> bool | None:
+    def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
                 self.SOURCE_PATTERN, content=self.content, return_match=True
@@ -33,4 +33,4 @@ class XindexObfDeobfuscator(BaseDecodersClass):
 
         except Exception as e:
             self.output.print_error(e)
-            return None
+            return False

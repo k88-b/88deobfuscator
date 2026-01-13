@@ -34,7 +34,7 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
         trash_pattern = r"(print\([^,]*),"
         self.content = re.sub(trash_pattern, r"\1)#", self.content, count=1)
 
-    def decode(self) -> bool | None:
+    def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
                 self.SOURCE_PATTERN, content=self.content, return_match=True
@@ -58,4 +58,4 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
         except Exception as e:
             self.output.print_error(e)
-            return None
+            return False

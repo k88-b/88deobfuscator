@@ -4,7 +4,6 @@ import re
 import zipfile
 import subprocess
 from ctypes import pythonapi
-from typing import Optional
 from core.abstract_decoder import BaseDecodersClass
 
 
@@ -58,7 +57,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate one of the layers: {e}")
 
-    def decode(self) -> Optional[bool]:
+    def decode(self) -> bool:
         try:
             if not self._check_input_file():
                 self.output.print_error(
@@ -78,7 +77,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
 
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate the file: {e}")
-            return None
+            return False
 
         finally:
             self.file_manager.cleanup()

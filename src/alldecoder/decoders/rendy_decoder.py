@@ -20,7 +20,7 @@ class RendyDecoder(BaseDecodersClass):
         r"__\[::-1\]\)\)\)\)\);exec\(_\('(.*?)'\)\)"
     )
 
-    def decode(self):
+    def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
                 self.SOURCE_PATTERN, content=self.content, return_match=True

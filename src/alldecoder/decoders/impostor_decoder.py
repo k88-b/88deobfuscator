@@ -6,7 +6,6 @@ import dis
 import marshal
 import re
 from types import CodeType
-from typing import Optional
 
 from core.abstract_decoder import BaseDecodersClass
 
@@ -85,7 +84,7 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
             self.output.print_error(f"Failed to unmarshal code object: {e}")
             return None
 
-    def decode(self) -> Optional[bool]:
+    def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
                 self.SOURCE_PATTERN, content=self.content, return_match=True
@@ -120,4 +119,4 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
 
         except Exception as e:
             self.output.print_error(e)
-            return None
+            return False
