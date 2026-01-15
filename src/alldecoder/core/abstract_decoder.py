@@ -28,11 +28,11 @@ class BaseDecodersClass(ABC):
         self.file_name = file_name
         self.new_file_name = new_file_name
         self.user_choice = user_choice
-        if user_choice != "17":
-            self.content = self.file_manager.read(self.file_name)
-        else:
-            self.content = ""
+        self.content = self._load_content()
         self.temp_file_path = self.file_manager.get_temp_path(self.config.TEMP_FILE)
+
+    def _load_content(self) -> str:
+        return self.file_manager.read(self.file_name)
 
     def _write_result(self) -> None:
         try:

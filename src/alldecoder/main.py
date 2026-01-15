@@ -8,6 +8,7 @@ from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
 from ui import CliOutput, CliInput
 
+
 def main():
     config = AppConfig()
     output = CliOutput(config)
@@ -21,7 +22,7 @@ def main():
         file_manager=file_manager,
         pattern_matcher=pattern_matcher,
         code_executor=code_executor,
-        config=config
+        config=config,
     )
     menu.run()
 

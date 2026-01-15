@@ -31,7 +31,7 @@ class RendyDecoder(BaseDecodersClass):
         decoded = marshal.loads(decoded).decode()
 
         return decoded
-        
+
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
@@ -40,13 +40,12 @@ class RendyDecoder(BaseDecodersClass):
 
             if not self.match:
                 return False
-            
+
             self.content = self._decode_content()
 
             self.content = self.pattern_matcher.remove_comments(self.content)
             self._write_result()
             return True
-
 
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate the file: {e}")

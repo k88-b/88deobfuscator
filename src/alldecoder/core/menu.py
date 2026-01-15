@@ -64,7 +64,7 @@ class Menu:
         file_manager: FileManager,
         pattern_matcher: PatternMatcher,
         code_executor: CodeExecutor,
-        config: AppConfig | None = None    
+        config: AppConfig | None = None,
     ):
         self.config = config or default_config
         self.output = cli_output
@@ -80,7 +80,7 @@ class Menu:
 
     def _check_user_input(self, value: str | None) -> None:
         if value is None:
-            print("Выход.")
+            print("Exiting.")
             raise SystemExit()
 
     def _process_user_choice(

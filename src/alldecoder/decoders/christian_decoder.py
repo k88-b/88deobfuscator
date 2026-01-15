@@ -10,6 +10,9 @@ from core.abstract_decoder import BaseDecodersClass
 class ChristianObfDeobfuscator(BaseDecodersClass):
     LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
 
+    def _load_content(self) -> str:
+        return ""
+
     def _check_input_file(self) -> bool:
         return zipfile.is_zipfile(self.file_name)
 

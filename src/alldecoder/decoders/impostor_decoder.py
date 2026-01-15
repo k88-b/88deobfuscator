@@ -6,6 +6,7 @@ import dis
 import marshal
 import re
 from types import CodeType
+from typing import Optional
 
 from core.abstract_decoder import BaseDecodersClass
 
