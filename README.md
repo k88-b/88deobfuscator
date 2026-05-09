@@ -9,7 +9,7 @@
 - **Auto-detection:** automatic recognition of the obfuscation type
 
 
-**Installation & Run::**
+**Installation & Run:**
 
     git clone https://github.com/k88-b/88deobfuscator.git
     cd 88deobfuscator
@@ -18,7 +18,7 @@
 
 Deobfuscating ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
 
-**Before/After Example::**
+**Before/After Example:**
 
 <div align="left">
   <img src="https://github.com/user-attachments/assets/b29407e1-0928-4725-9d78-48fb79c4c6c8" width="45%" />
