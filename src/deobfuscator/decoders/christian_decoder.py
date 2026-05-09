@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 import zipfile
 import subprocess
 from ctypes import pythonapi

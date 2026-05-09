@@ -6,7 +6,6 @@ import gzip
 import lzma
 import zlib
 import base64
-import re
 from core.abstract_decoder import BaseDecodersClass
 
 

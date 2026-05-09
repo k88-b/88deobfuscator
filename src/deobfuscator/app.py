@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from decoders import DECODER_REGISTRY
-from core.config import AppConfig, default_config
+from core.config import AppConfig
 from core.patterns import Patterns
 from core.file_manager import FileManager
 from core.code_executor import CodeExecutor
