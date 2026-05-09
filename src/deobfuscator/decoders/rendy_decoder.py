@@ -11,15 +11,6 @@ from core.abstract_decoder import BaseDecodersClass
 
 
 class RendyDecoder(BaseDecodersClass):
-    SOURCE_PATTERN = re.compile(
-        r"_=lambda __:__import__\('marshal'\)\.loads\("
-        r"__import__\('gzip'\)\.decompress\("
-        r"__import__\('lzma'\)\.decompress\("
-        r"__import__\('zlib'\)\.decompress\("
-        r"__import__\('base64'\)\.b64decode\("
-        r"__\[::-1\]\)\)\)\)\);exec\(_\('(.*?)'\)\)"
-    )
-
     def _decode_content(self) -> str:
         encoded = self.match.group(1)
         encoded = ast.literal_eval(f"b'{encoded}'")
@@ -35,7 +26,7 @@ class RendyDecoder(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.SOURCE_PATTERN, content=self.content, return_match=True
+                self.patterns.RENDY_OBF_PATTERN, content=self.content, return_match=True
             )
 
             if not self.match:

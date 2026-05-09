@@ -4,7 +4,6 @@ import ast
 import base64
 import dis
 import marshal
-import re
 from types import CodeType
 from typing import Optional
 
@@ -12,15 +11,6 @@ from core.abstract_decoder import BaseDecodersClass
 
 
 class ImpostorObfDeobfuscator(BaseDecodersClass):
-    SOURCE_PATTERN = re.compile(
-        r"(\.b(?:16|64)decode\([^)]+\))"
-        r"|(eval\s*\([^)]*chr\([^)]+\))"
-        r"|(exec\s*\([^)]*__globals[^)]*\))"
-        r"|(Gateway\([^)]*\))"
-        r"|(__tunnel\s*\([^)]*->\s*Gateway)"
-        r"|(__module_?_?[^=]*=)"
-    )
-
     def _find_exec_string(self, code_obj: CodeType) -> Optional[str]:
         instructions = list(dis.get_instructions(code_obj))
 
@@ -58,8 +48,7 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
         return None
 
     def _extract_encoded_data(self) -> Optional[bytes]:
-        pattern = r"Interpreter\((b[\"'][^']*[\"'])"
-        match = re.search(pattern, self.content)
+        match = self.patterns.IMPOSTOR_ENCODED_DATA_PATTERN.search(self.content)
 
         if not match:
             self.output.print_error("Could not find Impostor encoded data in content")
@@ -88,7 +77,7 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.SOURCE_PATTERN, content=self.content, return_match=True
+                self.patterns.IMPOSTOR_OBF_PATTERN, content=self.content, return_match=True
             )
             if not self.match:
                 return False

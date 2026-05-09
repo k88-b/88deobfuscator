@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from ui import CliOutput
 from core.config import AppConfig, default_config
+from core.patterns import Patterns
 from core.file_manager import FileManager
 from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
@@ -17,8 +18,9 @@ class BaseDecodersClass(ABC):
         file_manager: FileManager,
         code_executor: CodeExecutor,
         pattern_matcher: PatternMatcher,
+        patterns: Patterns,
         config: AppConfig | None = None,
-        user_choice: str = "",
+        user_choice: str = ""
     ):
         self.config = config or default_config
         self.file_manager = file_manager
@@ -30,6 +32,7 @@ class BaseDecodersClass(ABC):
         self.user_choice = user_choice
         self.content = self._load_content()
         self.temp_file_path = self.file_manager.get_temp_path(self.config.TEMP_FILE)
+        self.patterns = patterns
 
     def _load_content(self) -> str:
         return self.file_manager.read(self.file_name)
@@ -58,6 +61,9 @@ class BaseDecodersClass(ABC):
         self.content = self.pattern_matcher.remove_comments(self.content)
         self._write_result()
         return True
+
+    def _get_typical_pattern(self, encoding: str) -> str:
+        return [key for key, value in self.patterns.TYPICAL_PATTERNS.items() if value == encoding][0]
 
     @abstractmethod
     def decode(self):

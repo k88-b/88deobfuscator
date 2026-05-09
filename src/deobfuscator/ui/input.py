@@ -25,11 +25,11 @@ class CliInput:
             self.output.print_error("Invalid function selection.")
             continue
 
-    def get_file_name(self) -> Tuple[str, str] | None:
+    def get_file_name(self) -> Tuple[str | None, str | None]:
         while True:
             file_name = input("Enter file path: ").strip()
             if file_name == "99":
-                return None
+                return None, None
 
             file_name = (
                 file_name + ".py" if not file_name.endswith(".py") else file_name

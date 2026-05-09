@@ -1,38 +1,73 @@
 # -*- coding: utf-8 -*-
-from dataclasses import dataclass, field
+
+import re
 from typing import Dict
+from dataclasses import dataclass, field
 
 
 @dataclass
-class AppConfig:
-    NOTE: str = "# Deobfuscated with k88's tool \n# @k88_w\n\n"
+class Patterns:
     EXEC_PATTERN: str = r"exec\(\(_\)\(b['\"](.+?)['\"]\)\)"
     COMMENTS_PATTERN: str = r"#(.*?)\n"
-    TEMP_DIR: str = ".tempdir"
-    TEMP_FILE: str = ".temp.py"
-    COMPILED_FILE: str = "__main__.pyc"
-    DECODED_FILE_PREFIX: str = "decoded_"
-    CHRISTIAN_OBF_TEMPLATE_PREFIX: str = """
-def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
-    BANNER: str = r"""
-╔═════════════════════════╗
-║    88 Deobfuscator      ║
-╚═════════════════════════╝                                                
-"""
-    FUNCTIONS: str = """
-1  → Base64        7  → B64+Zlib      13 → B64+Lzma
-2  → Base32        8  → B32+Zlib      14 → B32+Lzma  
-3  → Base16        9  → B16+Zlib      15 → B16+Lzma
-4  → Zlib          10 → B64+Gzip      16 → RendyOBF
-5  → Gzip          11 → B32+Gzip      17 → ChristianObf
-6  → Lzma          12 → B16+Gzip      18 → BlankOBFv2
 
-19 → CleverObf     20 → GrandioseeObf 21 → XindexObf
-22 → ImpostorObf
-88 → Define Obf
-99 → EXIT
-"""
-    OBFUSCATION_PATTERNS: Dict[str, str] = field(
+    CHRISTIAN_OBF_LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
+
+    CLEVER_OBF_PATTERN = re.compile(
+        r"\(\s*lambda\s+__h\s*:\s*\(\s*__h\s*\(\s*\)\s*\)\s*\)\s*"
+        r"\(\s*lambda\s*:\s*\(\s*\(\s*_lIlllIllII\s*\[\s*0\s*\]\s*==\s*0\s*\)\s*"
+        r"and\s*\(\s*_lIlIlIllII\s*\(\s*0\s*,\s*1\s*\)\s*or\s*_lIllllII\s*"
+        r"\(\s*_lIlIIIllII\s*\)\s*\)\s*\)\s*\)",
+        re.DOTALL,
+    )
+
+    BLANK_OBF_PATTERN = re.compile(
+        r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"
+    )
+
+    BLANK_OBF_FIRST_LAYER_PATTERN = "[99, 101, 120, 101]"
+
+    BLANK_OBF_SECOND_LAYER_PATTERN = "in getattr(__import__(bytes([115, 110, 105, 116, 108, 105, 117, 98][::-1]).decode()), bytes([108, 97, 118, 101][::-1]).decode())(bytes([101, 103, 110, 97, 114][::-1]))"
+
+    BLANK_OBF_THIRD_LAYER_PATTERN = re.compile(r"\[\s*('(?:\d{1,3}\.){3}\d{1,3}'\s*,\s*)+")
+
+    BLANK_OBF_THIRD_LAYER_DEOBFUSCATION_PATTERN = re.compile(r"(.*?)\s*=\s*\[.*?\]")
+
+    GRANDIOSEE_OBF_PATTERN = re.compile(
+        r"([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\)\s*\))\s*"
+        r"\(\s*([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\))\s*\)\s*;\s*"
+        r"[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\)\s*\)\s*"
+        r"\(\s*([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\))\s*\)\s*;\s*"
+        r"([a-zA-Z0-9_]+\s*\(\s*\))"
+    )
+
+    GRANDIOSEE_OBF_TRASH_PATTERN = re.compile(r"(print\([^,]*),")
+
+    IMPOSTOR_OBF_PATTERN = re.compile(
+        r"(\.b(?:16|64)decode\([^)]+\))"
+        r"|(eval\s*\([^)]*chr\([^)]+\))"
+        r"|(exec\s*\([^)]*__globals[^)]*\))"
+        r"|(Gateway\([^)]*\))"
+        r"|(__tunnel\s*\([^)]*->\s*Gateway)"
+        r"|(__module_?_?[^=]*=)"
+    )
+
+    IMPOSTOR_OBF_ENCODED_DATA_PATTERN = re.compile(r"Interpreter\((b[\"'][^']*[\"'])")
+
+    RENDY_OBF_PATTERN = re.compile(
+        r"_=lambda __:__import__\('marshal'\)\.loads\("
+        r"__import__\('gzip'\)\.decompress\("
+        r"__import__\('lzma'\)\.decompress\("
+        r"__import__\('zlib'\)\.decompress\("
+        r"__import__\('base64'\)\.b64decode\("
+        r"__\[::-1\]\)\)\)\)\);exec\(_\('(.*?)'\)\)"
+    )
+
+    XINDEX_OBF_PATTERN = re.compile(
+        r"\w+\(\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\+\w+\[[0-9]+\]\)"
+        r"\s*\(\s*\w+\s*\(\s*[\"']([0-9|]+)[\"']\s*,\s*1\s*\)\s*\)"
+    )
+
+    TYPICAL_PATTERNS: Dict[str, str] = field(
         default_factory=lambda: {
             # base
             r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\);": "base64",
@@ -73,5 +108,7 @@ def globals():\n    return {'Easy protect by Christian F.': "easy protect by Chr
         }
     )
 
+    CHRISTIAN_OBF_TEMPLATE_PREFIX: str = """
+def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
 
-default_config = AppConfig()
+

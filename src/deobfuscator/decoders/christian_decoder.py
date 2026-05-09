@@ -8,8 +8,6 @@ from core.abstract_decoder import BaseDecodersClass
 
 
 class ChristianObfDeobfuscator(BaseDecodersClass):
-    LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
-
     def _load_content(self) -> str:
         return ""
 
@@ -19,7 +17,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
     def _check_obf(self, content: str) -> bool:
         try:
             if content:
-                return bool(self.LAYER_PATTERN.search(content))
+                return bool(self.patterns.CHRISTIAN_OBF_LAYER_PATTERN.search(content))
             else:
                 return False
         except Exception as e:
@@ -48,8 +46,8 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
 
             def hooked_exec(code, globals=None, locals=None) -> None:
                 code = code.decode()
-                if self.config.CHRISTIAN_OBF_TEMPLATE_PREFIX in code:
-                    print(code.replace(self.config.CHRISTIAN_OBF_TEMPLATE_PREFIX, ""))
+                if self.patterns.CHRISTIAN_OBF_TEMPLATE_PREFIX in code:
+                    print(code.replace(self.patterns.CHRISTIAN_OBF_TEMPLATE_PREFIX, ""))
                 else:
                     print(code)
 

@@ -23,18 +23,20 @@ class CompressionUtilsDecoder(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             if self.user_choice == "4":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(__\[::-1\]\);exec\(\(_\)\(b'(.*?)'\)\)"
+                pattern = self._get_typical_pattern("zlib")
                 self.algorithm = "zlib"
+                
             if self.user_choice == "5":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(__\[::-1\]\);exec\(\(_\)\(b'(.*?)'\)\)"
+                pattern = self._get_typical_pattern("gzip")
                 self.algorithm = "gzip"
+                
             if self.user_choice == "6":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(__\[::-1\]\);exec\(\(_\)\(b'(.*?)'\)\)"
+                pattern = self._get_typical_pattern("lzma")
                 self.algorithm = "lzma"
 
             return self.common_decode_logic(
                 pattern=pattern,
-                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);",
+                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);"
             )
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate the file: {e}")

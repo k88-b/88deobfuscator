@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import re
 from abc import ABC, abstractmethod
 from typing import Type
 from ui.output import CliOutput
 from core.abstract_decoder import BaseDecodersClass
 from core.code_executor import CodeExecutor
+from core.patterns import Patterns
 
 
 class Decoder(ABC):
     def __init__(
-        self, cli_output: CliOutput, code_executor: CodeExecutor, content: str = ""
+        self,
+        cli_output: CliOutput,
+        code_executor: CodeExecutor,
+        patterns: Patterns,
+        content: str = ""
     ) -> None:
         self.content = content
         self.output = cli_output
         self.code_executor = code_executor
+        self.patterns = patterns
 
     def _replace_bytes(self) -> None:
         self.content = self.content.replace(
@@ -44,8 +49,7 @@ class SecondLayer(Decoder):
 
 class ThirdLayer(Decoder):
     def deobfuscate(self):
-        pattern = r"(.*?)\s*=\s*\[.*?\]"
-        match = re.search(pattern, self.content)
+        match = self.patterns.BLANK_OBF_THIRD_LAYER_DEOBFUSCATION_PATTERN.search(self.content)
         if match:
             ip_table_name = match.group(1)
         else:
@@ -61,20 +65,15 @@ class ThirdLayer(Decoder):
 
 
 class BlankObfDeobfuscator(BaseDecodersClass):
-    SOURCE_PATTERN = re.compile(
-        r"bytes\(\[108,\s?97,\s?118,\s?101\]\[::-1\]\).decode\(\)\)\(bytes\(\[99,\s?101,\s?120,\s?101\]\[::-1\]\)\)"
-    )
-
     def _define_layer(self) -> str | None:
         layer = self.content
         if (
-            "in getattr(__import__(bytes([115, 110, 105, 116, 108, 105, 117, 98][::-1]).decode()), bytes([108, 97, 118, 101][::-1]).decode())(bytes([101, 103, 110, 97, 114][::-1]))"
-            in layer
+            self.patterns.BLANK_OBF_SECOND_LAYER_PATTERN in layer
         ):
             return "2"
-        elif re.search(r"\[\s*('(?:\d{1,3}\.){3}\d{1,3}'\s*,\s*)+", layer):
+        elif self.patterns.BLANK_OBF_THIRD_LAYER_PATTERN.search(layer):
             return "3"
-        elif "[99, 101, 120, 101]" in layer:
+        elif self.patterns.BLANK_OBF_FIRST_LAYER_PATTERN in layer:
             return "1"
         else:
             return None
@@ -82,7 +81,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             if not self.pattern_matcher.match_obfuscation(
-                self.SOURCE_PATTERN, content=self.content
+                self.patterns.BLANK_OBF_PATTERN, content=self.content
             ):
                 return False
 
@@ -100,6 +99,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                         content=self.content,
                         cli_output=self.output,
                         code_executor=self.code_executor,
+                        patterns=self.patterns
                     )
                     self.content = layer_decoder.deobfuscate()
 

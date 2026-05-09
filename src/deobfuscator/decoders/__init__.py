@@ -21,3 +21,29 @@ __all__ = [
     "XindexObfDeobfuscator",
     "ImpostorObfDeobfuscator",
 ]
+
+
+DECODER_REGISTRY = {
+    "1": BaseDecoder,
+    "2": BaseDecoder,
+    "3": BaseDecoder,
+    "4": CompressionUtilsDecoder,
+    "5": CompressionUtilsDecoder,
+    "6": CompressionUtilsDecoder,
+    "7": BaseCompressionUtilsDecoder,
+    "8": BaseCompressionUtilsDecoder,
+    "9": BaseCompressionUtilsDecoder,
+    "10": BaseCompressionUtilsDecoder,
+    "11": BaseCompressionUtilsDecoder,
+    "12": BaseCompressionUtilsDecoder,
+    "13": BaseCompressionUtilsDecoder,
+    "14": BaseCompressionUtilsDecoder,
+    "15": BaseCompressionUtilsDecoder,
+    "16": RendyDecoder,
+    "17": ChristianObfDeobfuscator,
+    "18": BlankObfDeobfuscator,
+    "19": CleverObfDeobfuscator,
+    "20": GrandioseeObfDeobfuscator,
+    "21": XindexObfDeobfuscator,
+    "22": ImpostorObfDeobfuscator,
+}

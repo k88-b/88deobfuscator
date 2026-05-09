@@ -1,18 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import re
 from core.abstract_decoder import BaseDecodersClass
 
 
 class GrandioseeObfDeobfuscator(BaseDecodersClass):
-    SOURCE_PATTERN = re.compile(
-        r"([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\)\s*\))\s*"
-        r"\(\s*([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\))\s*\)\s*;\s*"
-        r"[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\)\s*\)\s*"
-        r"\(\s*([a-zA-Z0-9_]+\s*\(\s*[a-zA-Z0-9_]+\s*\))\s*\)\s*;\s*"
-        r"([a-zA-Z0-9_]+\s*\(\s*\))"
-    )
-
     def _extract_components(self):
         self.main_obfuscated_block = self.match.group(0)
         self.exec_wrapper = self.match.group(1)
@@ -31,13 +22,16 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
             raise RuntimeError(f"Failed to execute first stage decoding: {e}")
 
     def _clean_content(self) -> None:
-        trash_pattern = r"(print\([^,]*),"
-        self.content = re.sub(trash_pattern, r"\1)#", self.content, count=1)
+        self.content = self.patterns.GRANDIOSEE_OBF_TRASH_PATTERN.sub(
+            r"\1)#",
+            self.content,
+            count=1
+        )
 
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.SOURCE_PATTERN, content=self.content, return_match=True
+                self.patterns.GRANDIOSEE_OBF_PATTERN, content=self.content, return_match=True
             )
             if not self.match:
                 return False

@@ -22,13 +22,13 @@ class BaseDecoder(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             if self.user_choice == "1":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\);"
+                pattern = self._get_typical_pattern("base64")
                 self.special = base64.b64decode
             elif self.user_choice == "2":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\);"
+                pattern = self._get_typical_pattern("base32")
                 self.special = base64.b32decode
             elif self.user_choice == "3":
-                pattern = r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\);"
+                pattern = self._get_typical_pattern("base16")
                 self.special = base64.b16decode
 
             return self.common_decode_logic(
