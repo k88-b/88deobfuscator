@@ -23,15 +23,15 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
     def _clean_content(self) -> None:
         self.content = self.patterns.GRANDIOSEE_OBF_TRASH_PATTERN.sub(
-            r"\1)#",
-            self.content,
-            count=1
+            r"\1)#", self.content, count=1
         )
 
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.patterns.GRANDIOSEE_OBF_PATTERN, content=self.content, return_match=True
+                self.patterns.GRANDIOSEE_OBF_PATTERN,
+                content=self.content,
+                return_match=True,
             )
             if not self.match:
                 return False

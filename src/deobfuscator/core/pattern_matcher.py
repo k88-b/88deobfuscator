@@ -16,10 +16,7 @@ class PatternMatcher:
         self.patterns = patterns
 
     def match_obfuscation(
-        self,
-        pattern: Union[str, re.Pattern],
-        content: str,
-        return_match=False
+        self, pattern: Union[str, re.Pattern], content: str, return_match=False
     ) -> Union[bool, re.Match]:
         match = re.search(pattern, content)
         if not match:

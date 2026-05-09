@@ -10,7 +10,9 @@ class Patterns:
     EXEC_PATTERN: str = r"exec\(\(_\)\(b['\"](.+?)['\"]\)\)"
     COMMENTS_PATTERN: str = r"#(.*?)\n"
 
-    CHRISTIAN_OBF_LAYER_PATTERN = re.compile(r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString")
+    CHRISTIAN_OBF_LAYER_PATTERN = re.compile(
+        r"__import__\('ctypes'\)\.pythonapi\.PyRun_SimpleString"
+    )
 
     CLEVER_OBF_PATTERN = re.compile(
         r"\(\s*lambda\s+__h\s*:\s*\(\s*__h\s*\(\s*\)\s*\)\s*\)\s*"
@@ -28,7 +30,9 @@ class Patterns:
 
     BLANK_OBF_SECOND_LAYER_PATTERN = "in getattr(__import__(bytes([115, 110, 105, 116, 108, 105, 117, 98][::-1]).decode()), bytes([108, 97, 118, 101][::-1]).decode())(bytes([101, 103, 110, 97, 114][::-1]))"
 
-    BLANK_OBF_THIRD_LAYER_PATTERN = re.compile(r"\[\s*('(?:\d{1,3}\.){3}\d{1,3}'\s*,\s*)+")
+    BLANK_OBF_THIRD_LAYER_PATTERN = re.compile(
+        r"\[\s*('(?:\d{1,3}\.){3}\d{1,3}'\s*,\s*)+"
+    )
 
     BLANK_OBF_THIRD_LAYER_DEOBFUSCATION_PATTERN = re.compile(r"(.*?)\s*=\s*\[.*?\]")
 
@@ -110,5 +114,3 @@ class Patterns:
 
     CHRISTIAN_OBF_TEMPLATE_PREFIX: str = """
 def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
-
-

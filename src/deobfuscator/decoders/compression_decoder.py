@@ -25,18 +25,18 @@ class CompressionUtilsDecoder(BaseDecodersClass):
             if self.user_choice == "4":
                 pattern = self._get_typical_pattern("zlib")
                 self.algorithm = "zlib"
-                
+
             if self.user_choice == "5":
                 pattern = self._get_typical_pattern("gzip")
                 self.algorithm = "gzip"
-                
+
             if self.user_choice == "6":
                 pattern = self._get_typical_pattern("lzma")
                 self.algorithm = "lzma"
 
             return self.common_decode_logic(
                 pattern=pattern,
-                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);"
+                clean_pattern=f"_ = lambda __ : __import__('{self.algorithm}').decompress(__[::-1]);",
             )
         except Exception as e:
             self.output.print_error(f"Failed to deobfuscate the file: {e}")

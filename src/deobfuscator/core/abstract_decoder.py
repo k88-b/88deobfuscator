@@ -20,7 +20,7 @@ class BaseDecodersClass(ABC):
         pattern_matcher: PatternMatcher,
         patterns: Patterns,
         config: AppConfig | None = None,
-        user_choice: str = ""
+        user_choice: str = "",
     ):
         self.config = config or default_config
         self.file_manager = file_manager
@@ -63,7 +63,11 @@ class BaseDecodersClass(ABC):
         return True
 
     def _get_typical_pattern(self, encoding: str) -> str:
-        return [key for key, value in self.patterns.TYPICAL_PATTERNS.items() if value == encoding][0]
+        return [
+            key
+            for key, value in self.patterns.TYPICAL_PATTERNS.items()
+            if value == encoding
+        ][0]
 
     @abstractmethod
     def decode(self):

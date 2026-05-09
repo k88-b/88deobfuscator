@@ -16,6 +16,5 @@ class CliOutput:
         print(self.config.BANNER)
         print(self.config.FUNCTIONS)
 
-
     def print_error(self, text: str) -> None:
         print(f"{self.RED}Error! {text}{self.RESET}", file=sys.stderr)

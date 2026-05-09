@@ -14,7 +14,7 @@ class Decoder(ABC):
         cli_output: CliOutput,
         code_executor: CodeExecutor,
         patterns: Patterns,
-        content: str = ""
+        content: str = "",
     ) -> None:
         self.content = content
         self.output = cli_output
@@ -49,7 +49,9 @@ class SecondLayer(Decoder):
 
 class ThirdLayer(Decoder):
     def deobfuscate(self):
-        match = self.patterns.BLANK_OBF_THIRD_LAYER_DEOBFUSCATION_PATTERN.search(self.content)
+        match = self.patterns.BLANK_OBF_THIRD_LAYER_DEOBFUSCATION_PATTERN.search(
+            self.content
+        )
         if match:
             ip_table_name = match.group(1)
         else:
@@ -67,9 +69,7 @@ class ThirdLayer(Decoder):
 class BlankObfDeobfuscator(BaseDecodersClass):
     def _define_layer(self) -> str | None:
         layer = self.content
-        if (
-            self.patterns.BLANK_OBF_SECOND_LAYER_PATTERN in layer
-        ):
+        if self.patterns.BLANK_OBF_SECOND_LAYER_PATTERN in layer:
             return "2"
         elif self.patterns.BLANK_OBF_THIRD_LAYER_PATTERN.search(layer):
             return "3"
@@ -99,7 +99,7 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                         content=self.content,
                         cli_output=self.output,
                         code_executor=self.code_executor,
-                        patterns=self.patterns
+                        patterns=self.patterns,
                     )
                     self.content = layer_decoder.deobfuscate()
 

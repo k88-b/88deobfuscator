@@ -19,11 +19,9 @@ class App:
         self.input = CliInput(self.output, self.config)
         self.file_manager = FileManager(self.output, self.config)
         self.code_executor = CodeExecutor(self.output)
-        self.pattern_matcher = PatternMatcher(self.output,self.patterns)
+        self.pattern_matcher = PatternMatcher(self.output, self.patterns)
         self.menu = Menu(
-            cli_output=self.output,
-            cli_input=self.input,
-            config=self.config
+            cli_output=self.output, cli_input=self.input, config=self.config
         )
         self.registry = DECODER_REGISTRY
 
@@ -32,13 +30,13 @@ class App:
         if user_choice is None or file_name is None:
             print("Exiting.")
             raise SystemExit()
-        
+
         if user_choice == "88":
             definer = DefineObfuscation(
                 file_name=file_name,
                 cli_output=self.output,
                 file_manager=self.file_manager,
-                patterns=self.patterns
+                patterns=self.patterns,
             )
             definer.define_obfuscation()
             return
@@ -53,7 +51,7 @@ class App:
             code_executor=self.code_executor,
             pattern_matcher=self.pattern_matcher,
             config=self.config,
-            patterns=self.patterns
+            patterns=self.patterns,
         )
         result = decoder.decode()
 
@@ -61,4 +59,3 @@ class App:
             print(f"Successfully deobfuscated! Check {new_file_name}")
         else:
             self.output.print_error("Failed to deobfuscate.")
-

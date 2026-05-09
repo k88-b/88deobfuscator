@@ -77,7 +77,9 @@ class ImpostorObfDeobfuscator(BaseDecodersClass):
     def decode(self) -> bool:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.patterns.IMPOSTOR_OBF_PATTERN, content=self.content, return_match=True
+                self.patterns.IMPOSTOR_OBF_PATTERN,
+                content=self.content,
+                return_match=True,
             )
             if not self.match:
                 return False

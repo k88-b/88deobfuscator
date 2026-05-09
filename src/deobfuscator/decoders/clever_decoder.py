@@ -13,7 +13,9 @@ class CleverObfDeobfuscator(BaseDecodersClass):
 
             crack_code = "print(_lIllIlIII)"
 
-            self.content = self.patterns.CLEVER_OBF_PATTERN.sub(crack_code, self.content)
+            self.content = self.patterns.CLEVER_OBF_PATTERN.sub(
+                crack_code, self.content
+            )
             self.content = self.code_executor.capture_exec_output(self.content)
 
             self._write_result()

@@ -26,11 +26,9 @@ class Menu:
         user_choice = self.input.get_function_choice()
         if user_choice is None:
             return None, None, None
-        
+
         file_name, new_file_name = self.input.get_file_name()
         if file_name is None:
             return None, None, None
-        
+
         return user_choice, file_name, new_file_name
-
-
