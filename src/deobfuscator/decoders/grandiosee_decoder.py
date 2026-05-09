@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class GrandioseeObfDeobfuscator(BaseDecodersClass):
@@ -18,23 +19,18 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
             output = output.replace(self.exec_wrapper, "print")
             return output
         except Exception as e:
-            self.output.print_error(f"First stage decoding error: {e}")
-            raise RuntimeError(f"Failed to execute first stage decoding: {e}")
+            raise DeobfuscationError(f"Failed to execute first stage decoding: {e}")
 
     def _clean_content(self) -> None:
         self.content = self.patterns.GRANDIOSEE_OBF_TRASH_PATTERN.sub(
             r"\1)#", self.content, count=1
         )
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.patterns.GRANDIOSEE_OBF_PATTERN,
-                content=self.content,
-                return_match=True,
+                self.patterns.GRANDIOSEE_OBF_PATTERN, content=self.content
             )
-            if not self.match:
-                return False
 
             self._extract_components()
 
@@ -48,8 +44,7 @@ class GrandioseeObfDeobfuscator(BaseDecodersClass):
 
             self.content = self.code_executor.capture_exec_output(self.content)
             self._write_result()
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(e)
-            return False
+            raise DeobfuscationError(e)

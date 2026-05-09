@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from typing import Optional
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class BaseDecoder(BaseDecodersClass):
-    def decode_layer(self, encoded_str: str) -> Optional[str]:
+    def decode_layer(self, encoded_str: str) -> str:
         try:
             padding = len(encoded_str) % 4
             if padding:
@@ -16,10 +16,9 @@ class BaseDecoder(BaseDecodersClass):
             return decoded_str.decode("utf-8")
 
         except Exception as e:
-            self.output.print_error(f"Failed to decode the layer: {e}")
-            return None
+            raise DeobfuscationError(f"Failed to decode the layer: {e}")
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
             if self.user_choice == "1":
                 pattern = self._get_typical_pattern("base64")
@@ -31,10 +30,12 @@ class BaseDecoder(BaseDecodersClass):
                 pattern = self._get_typical_pattern("base16")
                 self.special = base64.b16decode
 
-            return self.common_decode_logic(
+            self.common_decode_logic(
                 pattern=pattern,
                 clean_pattern=f"_ = lambda __ : __import__('base64').{self.special.__name__}(__[::-1]);",
             )
+
+            return
+
         except Exception as e:
-            self.output.print_error(str(e))
-            return False
+            raise DeobfuscationError(e)

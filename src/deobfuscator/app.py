@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import sys
 from decoders import DECODER_REGISTRY
 from core.config import AppConfig
 from core.patterns import Patterns
 from core.file_manager import FileManager
 from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
+from core.exceptions import DeobfuscationError
 from ui import CliOutput, CliInput
 from ui.menu import Menu
 from utils import DefineObfuscation
@@ -29,7 +31,7 @@ class App:
         user_choice, file_name, new_file_name = self.menu.interact()
         if user_choice is None or file_name is None:
             print("Exiting.")
-            raise SystemExit()
+            sys.exit(0)
 
         if user_choice == "88":
             definer = DefineObfuscation(
@@ -53,9 +55,16 @@ class App:
             config=self.config,
             patterns=self.patterns,
         )
-        result = decoder.decode()
 
-        if result:
-            print(f"Successfully deobfuscated! Check {new_file_name}")
-        else:
-            self.output.print_error("Failed to deobfuscate.")
+        try:
+            decoder.decode()
+
+        except DeobfuscationError as e:
+            self.output.print_error(str(e))
+            sys.exit(1)
+
+        except Exception as e:
+            self.output.print_error(f"Failed to deobfuscate file: {e}")
+            sys.exit(1)
+
+        print(f"Successfully deobfuscated! Check {new_file_name}")

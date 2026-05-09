@@ -4,12 +4,12 @@ import base64
 import gzip
 import lzma
 import zlib
-from typing import Optional
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class BaseCompressionUtilsDecoder(BaseDecodersClass):
-    def decode_layer(self, encoded_str: str) -> Optional[str]:
+    def decode_layer(self, encoded_str: str) -> str:
         try:
             padding = len(encoded_str) % 4
             if padding:
@@ -19,10 +19,9 @@ class BaseCompressionUtilsDecoder(BaseDecodersClass):
             return decompressed.decode("utf-8")
 
         except Exception as e:
-            self.output.print_error(f"Failed to decode the layer: {e}")
-            return None
+            raise DeobfuscationError(f"Failed to decode the layer: {e}")
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
             choices = {
                 "7": (
@@ -73,10 +72,11 @@ class BaseCompressionUtilsDecoder(BaseDecodersClass):
             }
 
             pattern, self.special, self.algorithm = choices[self.user_choice]
-            return self.common_decode_logic(
+            self.common_decode_logic(
                 pattern=pattern,
                 clean_pattern=f"_ = lambda __ : __import__('{self.algorithm.__name__}').decompress(__import__('base64').{self.special.__name__}(__[::-1]));",
             )
+            return
+
         except Exception as e:
-            self.output.print_error(str(e))
-            return False
+            raise DeobfuscationError(e)

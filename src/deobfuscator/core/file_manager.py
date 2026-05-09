@@ -4,6 +4,7 @@ import shutil
 import os
 from ui import CliOutput
 from core.config import AppConfig, default_config
+from core.exceptions import DeobfuscationError
 
 
 class FileManager:
@@ -14,30 +15,29 @@ class FileManager:
     def get_temp_path(self, filename: str) -> str:
         return os.path.join(self.config.TEMP_DIR, filename)
 
-    def write(self, file_name: str, content: str) -> bool:
+    def write(self, file_name: str, content: str) -> None:
         try:
             with open(file_name, "w", encoding="utf-8") as f:
                 f.write(content)
-                return True
         except Exception as e:
-            self.output.print_error(f"Failed to write content to file {file_name}: {e}")
-            return False
+            raise DeobfuscationError(
+                f"Failed to write content to file {file_name}: {e}"
+            )
 
     def read(self, file_name: str) -> str:
         try:
             with open(file_name, "r", encoding="utf-8") as f:
                 return f.read()
         except Exception as e:
-            self.output.print_error(
+            raise DeobfuscationError(
                 f"Failed to read the contents of file {file_name}: {e}"
             )
-            raise SystemExit()
 
     def create_temp_dir(self) -> None:
         try:
             os.makedirs(self.config.TEMP_DIR, exist_ok=True)
         except Exception as e:
-            self.output.print_error(f"Failed to create temp directory: {e}")
+            raise DeobfuscationError(f"Failed to create temp directory: {e}")
 
     def cleanup(self) -> None:
         if os.path.exists(self.config.TEMP_DIR):

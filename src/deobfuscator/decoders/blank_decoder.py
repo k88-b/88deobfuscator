@@ -6,6 +6,7 @@ from ui.output import CliOutput
 from core.abstract_decoder import BaseDecodersClass
 from core.code_executor import CodeExecutor
 from core.patterns import Patterns
+from core.exceptions import DeobfuscationError
 
 
 class Decoder(ABC):
@@ -55,7 +56,7 @@ class ThirdLayer(Decoder):
         if match:
             ip_table_name = match.group(1)
         else:
-            raise ValueError("Failed to find ip_table.")
+            raise DeobfuscationError("Failed to find ip_table.")
 
         self.content = self.content.strip().split("\n")
         self.content[-1] = (
@@ -78,12 +79,11 @@ class BlankObfDeobfuscator(BaseDecodersClass):
         else:
             return None
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
-            if not self.pattern_matcher.match_obfuscation(
+            self.pattern_matcher.match_obfuscation(
                 self.patterns.BLANK_OBF_PATTERN, content=self.content
-            ):
-                return False
+            )
 
             layer_classes_dict: dict[str, Type[Decoder]] = {
                 "1": FirstLayer,
@@ -104,14 +104,12 @@ class BlankObfDeobfuscator(BaseDecodersClass):
                     self.content = layer_decoder.deobfuscate()
 
             except Exception as e:
-                self.output.print_error(
+                raise DeobfuscationError(
                     f"Deobfuscation of layer {layer_decoder.__class__.__name__} failed: {e}"
                 )
-                return None
 
             self._write_result()
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(e)
-            return False
+            raise DeobfuscationError(e)

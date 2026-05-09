@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class CleverObfDeobfuscator(BaseDecodersClass):
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
-            if not self.pattern_matcher.match_obfuscation(
+            self.pattern_matcher.match_obfuscation(
                 self.patterns.CLEVER_OBF_PATTERN, content=self.content
-            ):
-                return False
+            )
 
             crack_code = "print(_lIllIlIII)"
 
@@ -19,8 +19,7 @@ class CleverObfDeobfuscator(BaseDecodersClass):
             self.content = self.code_executor.capture_exec_output(self.content)
 
             self._write_result()
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(e)
-            return False
+            raise DeobfuscationError(e)

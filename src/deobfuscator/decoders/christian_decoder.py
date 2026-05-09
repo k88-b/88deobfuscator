@@ -4,6 +4,7 @@ import zipfile
 import subprocess
 from ctypes import pythonapi
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class ChristianObfDeobfuscator(BaseDecodersClass):
@@ -18,10 +19,12 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
             if content:
                 return bool(self.patterns.CHRISTIAN_OBF_LAYER_PATTERN.search(content))
             else:
-                return False
+                raise DeobfuscationError(
+                    f"The source file ({self.file_name}) is not obfuscated."
+                )
+
         except Exception as e:
-            self.output.print_error(f"Failed to check the obfuscated file: {e}")
-            raise
+            raise DeobfuscationError(f"Failed to check the obfuscated file: {e}")
 
     def _extract_and_decompile(self) -> None:
         try:
@@ -38,7 +41,7 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
                 with open(self.temp_file_path, "w") as f:
                     subprocess.run(["pycdc", compiled_file_path], text=True, stdout=f)
         except Exception as e:
-            self.output.print_error(f"Failed to deobfuscate first layer: {e}")
+            raise DeobfuscationError(f"Failed to deobfuscate first layer: {e}")
 
     def _deobfuscate_layer(self) -> None:
         try:
@@ -55,15 +58,11 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
             self.content = self.code_executor.capture_exec_output(self.content)
 
         except Exception as e:
-            self.output.print_error(f"Failed to deobfuscate one of the layers: {e}")
+            raise DeobfuscationError(f"Failed to deobfuscate one of the layers: {e}")
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
-            if not self._check_input_file():
-                self.output.print_error(
-                    f"The source file ({self.file_name}) is not obfuscated."
-                )
-                raise SystemExit()
+            self._check_input_file()
 
             self.file_manager.create_temp_dir()
 
@@ -73,11 +72,10 @@ class ChristianObfDeobfuscator(BaseDecodersClass):
                 self._deobfuscate_layer()
 
             self._write_result()
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(f"Failed to deobfuscate the file: {e}")
-            return False
+            raise DeobfuscationError(f"Failed to deobfuscate the file: {e}")
 
         finally:
             self.file_manager.cleanup()

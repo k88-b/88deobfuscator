@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class XindexObfDeobfuscator(BaseDecodersClass):
@@ -11,22 +12,17 @@ class XindexObfDeobfuscator(BaseDecodersClass):
                 result.append(chr(int(part[5:]) - int(part[:5])))
         return "".join(result)
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.patterns.XINDEX_OBF_PATTERN,
-                content=self.content,
-                return_match=True,
+                self.patterns.XINDEX_OBF_PATTERN, content=self.content
             )
-            if not self.match:
-                return False
 
             encoded_string = self.match.group(1)
             self.content = self._decode_string(encoded_string)
             self._write_result()
 
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(e)
-            return False
+            raise DeobfuscationError(e)

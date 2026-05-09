@@ -7,6 +7,7 @@ import lzma
 import zlib
 import base64
 from core.abstract_decoder import BaseDecodersClass
+from core.exceptions import DeobfuscationError
 
 
 class RendyDecoder(BaseDecodersClass):
@@ -22,21 +23,17 @@ class RendyDecoder(BaseDecodersClass):
 
         return decoded
 
-    def decode(self) -> bool:
+    def decode(self) -> None:
         try:
             self.match = self.pattern_matcher.match_obfuscation(
-                self.patterns.RENDY_OBF_PATTERN, content=self.content, return_match=True
+                self.patterns.RENDY_OBF_PATTERN, content=self.content
             )
-
-            if not self.match:
-                return False
 
             self.content = self._decode_content()
 
             self.content = self.pattern_matcher.remove_comments(self.content)
             self._write_result()
-            return True
+            return
 
         except Exception as e:
-            self.output.print_error(f"Failed to deobfuscate the file: {e}")
-            return False
+            raise DeobfuscationError(f"Failed to deobfuscate the file: {e}")

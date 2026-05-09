@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from ui import CliOutput
+from core.exceptions import DeobfuscationError
 from core.config import AppConfig, default_config
 from core.patterns import Patterns
 from core.file_manager import FileManager
@@ -44,15 +45,12 @@ class BaseDecodersClass(ABC):
                 content=self.config.NOTE + self.content.strip(),
             )
         except Exception as e:
-            self.output.print_error(
+            raise DeobfuscationError(
                 f"Failed to write the final result to the file: {e}"
             )
 
-    def common_decode_logic(self, pattern: str, clean_pattern: str) -> bool:
-        if not self.pattern_matcher.match_obfuscation(
-            pattern=pattern, content=self.content
-        ):
-            return False
+    def common_decode_logic(self, pattern: str, clean_pattern: str) -> None:
+        self.pattern_matcher.match_obfuscation(pattern=pattern, content=self.content)
         self.content = self.pattern_matcher.process_exec_layers(
             content=self.content,
             decode_layer_callback=lambda m: self.decode_layer(m.group(1)),
@@ -60,7 +58,7 @@ class BaseDecodersClass(ABC):
         self.content = self.content.replace(clean_pattern, "")
         self.content = self.pattern_matcher.remove_comments(self.content)
         self._write_result()
-        return True
+        return
 
     def _get_typical_pattern(self, encoding: str) -> str:
         return [

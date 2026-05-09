@@ -17,6 +17,7 @@ class DefineObfuscation:
         self.output = cli_output
         self.file_manager = file_manager
         self.file_name = file_name
+        self.patterns = patterns
 
     def define_obfuscation(self) -> None:
         code = self.file_manager.read(self.file_name)

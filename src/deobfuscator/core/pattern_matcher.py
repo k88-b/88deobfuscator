@@ -4,6 +4,7 @@ import re
 from typing import Union
 from ui import CliOutput
 from core.patterns import Patterns
+from core.exceptions import DeobfuscationError
 
 
 class PatternMatcher:
@@ -16,17 +17,13 @@ class PatternMatcher:
         self.patterns = patterns
 
     def match_obfuscation(
-        self, pattern: Union[str, re.Pattern], content: str, return_match=False
-    ) -> Union[bool, re.Match]:
+        self, pattern: Union[str, re.Pattern], content: str
+    ) -> re.Match:
         match = re.search(pattern, content)
         if not match:
-            self.output.print_error("Obfuscation not detected.")
-            return False
+            raise DeobfuscationError("Obfuscation not detected.")
 
-        if return_match:
-            return match
-
-        return True
+        return match
 
     def remove_comments(self, content: str) -> str:
         try:
@@ -45,4 +42,6 @@ class PatternMatcher:
 
             return content
         except Exception as e:
-            self.output.print_error(f"Failed to process code on one of the layers: {e}")
+            raise DeobfuscationError(
+                f"Failed to process code on one of the layers: {e}"
+            )
