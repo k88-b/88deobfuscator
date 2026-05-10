@@ -47,7 +47,7 @@ class ImpostorObfDeobfuscator(BaseDecoder):
         raise DeobfuscationError("Could not find exec string in bytecode")
 
     def _extract_encoded_data(self) -> bytes:
-        match = self.patterns.IMPOSTOR_ENCODED_DATA_PATTERN.search(self.content)
+        match = self.patterns.IMPOSTOR_OBF_ENCODED_DATA_PATTERN.search(self.content)
 
         if not match:
             raise DeobfuscationError("Could not find Impostor encoded data in content")

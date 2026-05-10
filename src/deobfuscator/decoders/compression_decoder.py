@@ -21,17 +21,23 @@ class CompressionUtilsDecoder(BaseDecoder):
 
     def decode(self) -> None:
         try:
-            if self.user_choice == "4":
-                pattern = self._get_typical_pattern("zlib")
-                self.algorithm = "zlib"
-
-            elif self.user_choice == "5":
-                pattern = self._get_typical_pattern("gzip")
-                self.algorithm = "gzip"
-
-            elif self.user_choice == "6":
-                pattern = self._get_typical_pattern("lzma")
-                self.algorithm = "lzma"
+            choices = {
+                "4": (
+                    self._get_typical_pattern("zlib"),
+                    "zlib",
+                ),
+                "5": (
+                    self._get_typical_pattern("gzip"),
+                    "gzip",
+                ),
+                "6": (
+                    self._get_typical_pattern("lzma"),
+                    "lzma",
+                ),
+            }
+            
+            pattern, self.algorithm = choices[self.user_choice]
+                
 
             self.common_decode_logic(
                 pattern=pattern,

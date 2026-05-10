@@ -20,15 +20,22 @@ class BaseXDecoder(BaseDecoder):
 
     def decode(self) -> None:
         try:
-            if self.user_choice == "1":
-                pattern = self._get_typical_pattern("base64")
-                self.special = base64.b64decode
-            elif self.user_choice == "2":
-                pattern = self._get_typical_pattern("base32")
-                self.special = base64.b32decode
-            elif self.user_choice == "3":
-                pattern = self._get_typical_pattern("base16")
-                self.special = base64.b16decode
+            choices = {
+                "1": (
+                    self._get_typical_pattern("base64"),
+                    base64.b64decode,
+                ),
+                "2": (
+                    self._get_typical_pattern("base32"),
+                    base64.b32decode,
+                ),
+                "3": (
+                    self._get_typical_pattern("base16"),
+                    base64.b16decode,
+                ),
+            }
+            
+            pattern, self.special = choices[self.user_choice]
 
             self.common_decode_logic(
                 pattern=pattern,
