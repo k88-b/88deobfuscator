@@ -16,9 +16,9 @@ class ChristianObfDeobfuscator(BaseDecoder):
             raise DeobfuscationError(
                 f"The source file ({self.file_name}) is not obfuscated."
             )
-        
+
         return
-        
+
     def _check_obf(self, content: str) -> bool:
         try:
             if content:

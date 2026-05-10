@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from decoders import DECODER_REGISTRY
 from core.config import AppConfig
 from core.patterns import Patterns
 from core.file_manager import FileManager
@@ -12,20 +11,33 @@ from ui import CliOutput, CliInput
 from ui.menu import Menu
 from utils import DefineObfuscation
 
+from decoders.registry import (
+    DECODER_REGISTRY,
+    MENU_CHOICES,
+    get_menu_text,
+    get_info_by_choice,
+)
+
 
 class App:
     def __init__(self):
         self.config = AppConfig()
         self.patterns = Patterns()
+        self.menu_text = get_menu_text()
+        self.valid_choices = set(MENU_CHOICES.keys())
+        self.valid_choices.add("88")
         self.output = CliOutput(self.config)
         self.input = CliInput(self.output, self.config)
         self.file_manager = FileManager(self.output, self.config)
         self.code_executor = CodeExecutor(self.output)
         self.pattern_matcher = PatternMatcher(self.output, self.patterns)
         self.menu = Menu(
-            cli_output=self.output, cli_input=self.input, config=self.config
+            cli_output=self.output,
+            cli_input=self.input,
+            menu_text=self.menu_text,
+            valid_choices=self.valid_choices,
+            config=self.config,
         )
-        self.registry = DECODER_REGISTRY
 
     def run(self) -> None:
         user_choice, file_name, new_file_name = self.menu.interact()
@@ -38,16 +50,23 @@ class App:
                 file_name=file_name,
                 cli_output=self.output,
                 file_manager=self.file_manager,
-                patterns=self.patterns,
             )
-            definer.define_obfuscation()
-            return
+            method_key = definer.detect()
 
-        decoder_class = self.registry[user_choice]
+            if method_key is None:
+                sys.exit(1)
+
+            decoder_class = DECODER_REGISTRY[method_key]
+
+        else:
+            info = get_info_by_choice(user_choice)
+            decoder_class = info.decoder_class
+            method_key = info.key
+
         decoder = decoder_class(
             file_name=file_name,
             new_file_name=new_file_name,
-            user_choice=user_choice,
+            method_key=method_key,
             cli_output=self.output,
             file_manager=self.file_manager,
             code_executor=self.code_executor,

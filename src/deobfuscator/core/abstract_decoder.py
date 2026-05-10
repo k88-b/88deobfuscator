@@ -21,7 +21,7 @@ class BaseDecoder(ABC):
         pattern_matcher: PatternMatcher,
         patterns: Patterns,
         config: AppConfig | None = None,
-        user_choice: str = "",
+        method_key: str = "",
     ):
         self.config = config or default_config
         self.file_manager = file_manager
@@ -30,7 +30,7 @@ class BaseDecoder(ABC):
         self.output = cli_output
         self.file_name = file_name
         self.new_file_name = new_file_name
-        self.user_choice = user_choice
+        self.method_key = method_key
         self.content = self._load_content()
         self.temp_file_path = self.file_manager.get_temp_path(self.config.TEMP_FILE)
         self.patterns = patterns
@@ -59,13 +59,6 @@ class BaseDecoder(ABC):
         self.content = self.pattern_matcher.remove_comments(self.content)
         self._write_result()
         return
-
-    def _get_typical_pattern(self, encoding: str) -> str:
-        return [
-            key
-            for key, value in self.patterns.TYPICAL_PATTERNS.items()
-            if value == encoding
-        ][0]
 
     @abstractmethod
     def decode(self):

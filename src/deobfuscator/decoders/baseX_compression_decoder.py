@@ -24,54 +24,54 @@ class BaseCompressionUtilsDecoder(BaseDecoder):
     def decode(self) -> None:
         try:
             choices = {
-                "7": (
-                    self._get_typical_pattern("base64 + zlib"),
+                "base64+zlib": (
+                    self.patterns.BASE64_ZLIB_PATTERN,
                     base64.b64decode,
                     zlib,
                 ),
-                "8": (
-                    self._get_typical_pattern("base32 + zlib"),
+                "base32+zlib": (
+                    self.patterns.BASE32_ZLIB_PATTERN,
                     base64.b32decode,
                     zlib,
                 ),
-                "9": (
-                    self._get_typical_pattern("base16 + zlib"),
+                "base16+zlib": (
+                    self.patterns.BASE16_ZLIB_PATTERN,
                     base64.b16decode,
                     zlib,
                 ),
-                "10": (
-                    self._get_typical_pattern("base64 + gzip"),
+                "base64+gzip": (
+                    self.patterns.BASE64_GZIP_PATTERN,
                     base64.b64decode,
                     gzip,
                 ),
-                "11": (
-                    self._get_typical_pattern("base32 + gzip"),
+                "base32+gzip": (
+                    self.patterns.BASE32_GZIP_PATTERN,
                     base64.b32decode,
                     gzip,
                 ),
-                "12": (
-                    self._get_typical_pattern("base16 + gzip"),
+                "base16+gzip": (
+                    self.patterns.BASE16_GZIP_PATTERN,
                     base64.b16decode,
                     gzip,
                 ),
-                "13": (
-                    self._get_typical_pattern("base64 + lzma"),
+                "base64+lzma": (
+                    self.patterns.BASE64_LZMA_PATTERN,
                     base64.b64decode,
                     lzma,
                 ),
-                "14": (
-                    self._get_typical_pattern("base32 + lzma"),
+                "base32+lzma": (
+                    self.patterns.BASE32_LZMA_PATTERN,
                     base64.b32decode,
                     lzma,
                 ),
-                "15": (
-                    self._get_typical_pattern("base16 + lzma"),
+                "base16+lzma": (
+                    self.patterns.BASE16_LZMA_PATTERN,
                     base64.b16decode,
                     lzma,
                 ),
             }
 
-            pattern, self.special, self.algorithm = choices[self.user_choice]
+            pattern, self.special, self.algorithm = choices[self.method_key]
             self.common_decode_logic(
                 pattern=pattern,
                 clean_pattern=f"_ = lambda __ : __import__('{self.algorithm.__name__}').decompress(__import__('base64').{self.special.__name__}(__[::-1]));",

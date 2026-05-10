@@ -11,13 +11,11 @@ class CliInput:
         self.output = cli_output
         self.config = config or default_config
 
-    def get_function_choice(self) -> str | None:
+    def get_function_choice(self, valid_choices: set[str] | None = None) -> str | None:
         while True:
             user_input = input("Your choice: ").strip()
             if user_input == "99":
                 return None
-
-            valid_choices = [str(i) for i in range(1, 23)] + ["88"]
 
             if user_input in valid_choices:
                 return user_input

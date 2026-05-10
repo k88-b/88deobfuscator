@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from typing import Dict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -71,46 +70,58 @@ class Patterns:
         r"\s*\(\s*\w+\s*\(\s*[\"']([0-9|]+)[\"']\s*,\s*1\s*\)\s*\)"
     )
 
-    TYPICAL_PATTERNS: Dict[str, str] = field(
-        default_factory=lambda: {
-            # base
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\);": "base64",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\);": "base32",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\);": "base16",
-            # compression
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(__\[::-1\]\);": "zlib",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(__\[::-1\]\);": "gzip",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(__\[::-1\]\);": "lzma",
-            # base64 + compression
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);": "base64 + zlib",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);": "base64 + gzip",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);": "base64 + lzma",
-            # base32 + compression
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);": "base32 + zlib",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);": "base32 + gzip",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);": "base32 + lzma",
-            # base16 + compression
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);": "base16 + zlib",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);": "base16 + gzip",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);": "base16 + lzma",
-            # marshal
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__\[::-1\]\);": "marshal",
-            # marshal + base
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);": "marshal + base64",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);": "marshal + base32",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);": "marshal + base16",
-            # marshal + compression
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('zlib'\)\.decompress\(__\[::-1\]\)\);": "marshal + zlib",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('gzip'\)\.decompress\(__\[::-1\]\)\);": "marshal + gzip",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('lzma'\)\.decompress\(__\[::-1\]\)\);": "marshal + lzma",
-            # marshal + compression + base
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\)\);": "marshal + zlib + base64",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\)\);": "marshal + zlib + base32",
-            r"_\s*=\s*lambda\s*__\s*:\s*__import__\('marshal'\)\.loads\(__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\)\);": "marshal + zlib + base16",
-            # other
-            r"_=lambda __:__import__\('marshal'\)\.loads\(__import__\('gzip'\)\.decompress\(__import__\('lzma'\)\.decompress\(__import__\('zlib'\)\.decompress\(__import__\('base64'\)\.b64decode\(__\[::-1\]\)\)\)\)\);": "rendy obf (marshal , gzip , lzma , zlib, base64 )",
-        }
-    )
-
     CHRISTIAN_OBF_TEMPLATE_PREFIX: str = """
 def globals():\n    return {'Easy protect by Christian F.': "easy protect by Christian F."}\n__import__('ctypes').pythonapi.PyRun_SimpleString(b'print("Easy protect by Christian F.")')"""
+
+    BASE64_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\);"
+    )
+    BASE32_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\);"
+    )
+    BASE16_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\);"
+    )
+
+    ZLIB_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(__\[::-1\]\);"
+    )
+    GZIP_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(__\[::-1\]\);"
+    )
+    LZMA_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(__\[::-1\]\);"
+    )
+
+    # base64 + compression
+    BASE64_ZLIB_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);"
+    )
+    BASE64_GZIP_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);"
+    )
+    BASE64_LZMA_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b64decode\(__\[::-1\]\)\);"
+    )
+
+    # base32 + compression
+    BASE32_ZLIB_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);"
+    )
+    BASE32_GZIP_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);"
+    )
+    BASE32_LZMA_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b32decode\(__\[::-1\]\)\);"
+    )
+
+    # base16 + compression
+    BASE16_ZLIB_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('zlib'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);"
+    )
+    BASE16_GZIP_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('gzip'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);"
+    )
+    BASE16_LZMA_PATTERN = re.compile(
+        r"_\s*=\s*lambda\s*__\s*:\s*__import__\('lzma'\)\.decompress\(\s*__import__\('base64'\)\.b16decode\(__\[::-1\]\)\);"
+    )

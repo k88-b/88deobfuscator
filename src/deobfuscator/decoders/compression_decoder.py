@@ -22,22 +22,13 @@ class CompressionUtilsDecoder(BaseDecoder):
     def decode(self) -> None:
         try:
             choices = {
-                "4": (
-                    self._get_typical_pattern("zlib"),
-                    "zlib",
-                ),
-                "5": (
-                    self._get_typical_pattern("gzip"),
-                    "gzip",
-                ),
-                "6": (
-                    self._get_typical_pattern("lzma"),
-                    "lzma",
-                ),
+                "zlib": self.patterns.ZLIB_PATTERN,
+                "gzip": self.patterns.GZIP_PATTERN,
+                "lzma": self.patterns.LZMA_PATTERN,
             }
-            
-            pattern, self.algorithm = choices[self.user_choice]
-                
+
+            self.algorithm = self.method_key
+            pattern = choices[self.algorithm]
 
             self.common_decode_logic(
                 pattern=pattern,

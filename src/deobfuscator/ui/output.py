@@ -11,10 +11,10 @@ class CliOutput:
     def __init__(self, config: AppConfig | None = None):
         self.config = config or default_config
 
-    def print_info(self) -> None:
+    def print_info(self, functions: str) -> None:
         # os.system("clear" if os.name == "posix" else "cls")
         print(self.config.BANNER)
-        print(self.config.FUNCTIONS)
+        print(functions)
 
     def print_error(self, text: str) -> None:
         print(f"{self.RED}Error! {text}{self.RESET}", file=sys.stderr)

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import re
 from ui.output import CliOutput
-from core.patterns import Patterns
 from core.file_manager import FileManager
+from decoders.registry import REGISTRY
 
 
 class DefineObfuscation:
@@ -12,21 +11,21 @@ class DefineObfuscation:
         file_name: str,
         cli_output: CliOutput,
         file_manager: FileManager,
-        patterns: Patterns,
     ):
         self.output = cli_output
         self.file_manager = file_manager
         self.file_name = file_name
-        self.patterns = patterns
 
-    def define_obfuscation(self) -> None:
+    def detect(self) -> str | None:
         code = self.file_manager.read(self.file_name)
 
-        for key, value in self.patterns.TYPICAL_PATTERNS.items():
-            match = re.search(key, code)
+        for info in REGISTRY:
+            if info.pattern is None:
+                continue
 
-            if match:
-                print(f"Obfuscation found! Name: {value}")
-                return
+            if info.pattern.search(code):
+                print(f"Obfuscation found! Name: {info.key}")
+                return info.key
 
         print("No obfuscation found.")
+        return None
