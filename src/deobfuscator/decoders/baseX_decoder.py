@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import base64
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class BaseDecoder(BaseDecodersClass):
+class BaseXDecoder(BaseDecoder):
     def decode_layer(self, encoded_str: str) -> str:
         try:
             padding = len(encoded_str) % 4

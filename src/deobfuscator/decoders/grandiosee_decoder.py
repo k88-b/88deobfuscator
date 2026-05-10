@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class GrandioseeObfDeobfuscator(BaseDecodersClass):
+class GrandioseeObfDeobfuscator(BaseDecoder):
     def _extract_components(self):
         self.main_obfuscated_block = self.match.group(0)
         self.exec_wrapper = self.match.group(1)

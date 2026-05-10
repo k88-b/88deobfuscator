@@ -4,11 +4,11 @@ import ast
 import zlib
 import gzip
 import lzma
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class CompressionUtilsDecoder(BaseDecodersClass):
+class CompressionUtilsDecoder(BaseDecoder):
     def decode_layer(self, encoded_str: str) -> str:
         try:
             bytes_data = ast.literal_eval(f"b'{encoded_str}'")

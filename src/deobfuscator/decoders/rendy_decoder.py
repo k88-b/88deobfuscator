@@ -6,11 +6,11 @@ import gzip
 import lzma
 import zlib
 import base64
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class RendyDecoder(BaseDecodersClass):
+class RendyDecoder(BaseDecoder):
     def _decode_content(self) -> str:
         encoded = self.match.group(1)
         encoded = ast.literal_eval(f"b'{encoded}'")

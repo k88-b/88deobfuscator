@@ -3,11 +3,11 @@
 import zipfile
 import subprocess
 from ctypes import pythonapi
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class ChristianObfDeobfuscator(BaseDecodersClass):
+class ChristianObfDeobfuscator(BaseDecoder):
     def _load_content(self) -> str:
         return ""
 

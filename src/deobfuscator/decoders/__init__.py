@@ -1,4 +1,4 @@
-from .baseX_decoder import BaseDecoder
+from .baseX_decoder import BaseXDecoder
 from .compression_decoder import CompressionUtilsDecoder
 from .baseX_compression_decoder import BaseCompressionUtilsDecoder
 from .blank_decoder import BlankObfDeobfuscator
@@ -10,7 +10,7 @@ from .xindex_decoder import XindexObfDeobfuscator
 from .impostor_decoder import ImpostorObfDeobfuscator
 
 __all__ = [
-    "BaseDecoder",
+    "BaseXDecoder",
     "CompressionUtilsDecoder",
     "BaseCompressionUtilsDecoder",
     "BlankObfDeobfuscator",
@@ -24,9 +24,9 @@ __all__ = [
 
 
 DECODER_REGISTRY = {
-    "1": BaseDecoder,
-    "2": BaseDecoder,
-    "3": BaseDecoder,
+    "1": BaseXDecoder,
+    "2": BaseXDecoder,
+    "3": BaseXDecoder,
     "4": CompressionUtilsDecoder,
     "5": CompressionUtilsDecoder,
     "6": CompressionUtilsDecoder,

@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import Type
 from ui.output import CliOutput
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.code_executor import CodeExecutor
 from core.patterns import Patterns
 from core.exceptions import DeobfuscationError
@@ -67,7 +67,7 @@ class ThirdLayer(Decoder):
         return self.code_executor.capture_exec_output(self.content)
 
 
-class BlankObfDeobfuscator(BaseDecodersClass):
+class BlankObfDeobfuscator(BaseDecoder):
     def _define_layer(self) -> str | None:
         layer = self.content
         if self.patterns.BLANK_OBF_SECOND_LAYER_PATTERN in layer:

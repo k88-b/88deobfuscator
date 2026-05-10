@@ -5,11 +5,11 @@ import base64
 import dis
 import marshal
 from types import CodeType
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class ImpostorObfDeobfuscator(BaseDecodersClass):
+class ImpostorObfDeobfuscator(BaseDecoder):
     def _find_exec_string(self, code_obj: CodeType) -> str:
         instructions = list(dis.get_instructions(code_obj))
 

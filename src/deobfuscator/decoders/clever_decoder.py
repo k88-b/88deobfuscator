@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class CleverObfDeobfuscator(BaseDecodersClass):
+class CleverObfDeobfuscator(BaseDecoder):
     def decode(self) -> None:
         try:
             self.pattern_matcher.match_obfuscation(

@@ -10,7 +10,7 @@ from core.code_executor import CodeExecutor
 from core.pattern_matcher import PatternMatcher
 
 
-class BaseDecodersClass(ABC):
+class BaseDecoder(ABC):
     def __init__(
         self,
         file_name: str,

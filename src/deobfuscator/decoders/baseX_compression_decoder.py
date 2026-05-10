@@ -4,11 +4,11 @@ import base64
 import gzip
 import lzma
 import zlib
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class BaseCompressionUtilsDecoder(BaseDecodersClass):
+class BaseCompressionUtilsDecoder(BaseDecoder):
     def decode_layer(self, encoded_str: str) -> str:
         try:
             padding = len(encoded_str) % 4

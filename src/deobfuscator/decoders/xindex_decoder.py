@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from core.abstract_decoder import BaseDecodersClass
+from core.abstract_decoder import BaseDecoder
 from core.exceptions import DeobfuscationError
 
 
-class XindexObfDeobfuscator(BaseDecodersClass):
+class XindexObfDeobfuscator(BaseDecoder):
     def _decode_string(self, encoded: str) -> str:
         result = []
         for part in encoded.split("|"):
