@@ -25,11 +25,11 @@ class CompressionUtilsDecoder(BaseDecodersClass):
                 pattern = self._get_typical_pattern("zlib")
                 self.algorithm = "zlib"
 
-            if self.user_choice == "5":
+            elif self.user_choice == "5":
                 pattern = self._get_typical_pattern("gzip")
                 self.algorithm = "gzip"
 
-            if self.user_choice == "6":
+            elif self.user_choice == "6":
                 pattern = self._get_typical_pattern("lzma")
                 self.algorithm = "lzma"
 
