@@ -11,9 +11,14 @@ class ChristianObfDeobfuscator(BaseDecoder):
     def _load_content(self) -> str:
         return ""
 
-    def _check_input_file(self) -> bool:
-        return zipfile.is_zipfile(self.file_name)
-
+    def _check_input_file(self) -> None:
+        if not zipfile.is_zipfile(self.file_name):
+            raise DeobfuscationError(
+                f"The source file ({self.file_name}) is not obfuscated."
+            )
+        
+        return
+        
     def _check_obf(self, content: str) -> bool:
         try:
             if content:
