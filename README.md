@@ -6,7 +6,7 @@
 - **Combinations:** base + compression
 - **Alana:** GrandioseeObf, CleverObf, XindexObf
 - **Specific:** RendyObf, BlankObfv2, ChristianObf, ImpostorObf
-- **Auto-detection:** automatic recognition of the obfuscation type
+- **Auto-mode:** automatic recognition of the obfuscation type and deobfuscate it
 
 
 **Installation & Run:**
@@ -14,7 +14,7 @@
     git clone https://github.com/k88-b/88deobfuscator.git
     cd 88deobfuscator
     uv sync
-    uv run src/alldecoder/main.py
+    uv run src/deobfuscator/main.py
 
 Deobfuscating ChristianObf requires [pycdc](https://github.com/zrax/pycdc).
 
