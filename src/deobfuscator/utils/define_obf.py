@@ -24,8 +24,6 @@ class DefineObfuscation:
                 continue
 
             if info.pattern.search(code):
-                print(f"Obfuscation found! Name: {info.key}")
                 return info.key
 
-        print("No obfuscation found.")
         return None

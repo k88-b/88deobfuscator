@@ -54,7 +54,10 @@ class App:
             method_key = definer.detect()
 
             if method_key is None:
+                print("No obfuscation found.")
                 sys.exit(1)
+
+            print(f"Obfuscation found! Name: {method_key}")
 
             decoder_class = DECODER_REGISTRY[method_key]
 
