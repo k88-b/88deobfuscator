@@ -1,5 +1,9 @@
 **88 Deobfuscator**
 
+[![CLI Version](https://img.shields.io/badge/⚡_CLI_Version-88deobfuscator--batch-blue?style=flat-square)](https://github.com/k88-b/88deobfuscator-batch)
+
+> Interactive menu-based deobfuscator for beginners
+
 **Supported Obfuscations:**
 - **Base:** base64, base32, base16
 - **Compressions:** zlib, gzip, lzma
